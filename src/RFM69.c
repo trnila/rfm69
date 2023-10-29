@@ -8,6 +8,12 @@
 #define CS_PORT GPIOA
 #define CS_PIN 15
 
+#define RFM69_FIFO_SIZE 66
+
+static volatile bool received = false;
+static uint8_t data[RFM69_FIFO_SIZE];
+static const uint32_t irq_pin = 6;
+
 void spi_init() {
   RCC->APBENR2 |= RCC_APBENR2_SPI1EN;
 
@@ -64,6 +70,31 @@ void RFM69_set_mode(RFM69_Mode mode) {
     ;
 }
 
+void EXTI4_15_IRQHandler() {
+  received = 1;
+  EXTI->RPR1 = 1 << irq_pin;
+}
+
+uint8_t *RFM69_readmsg(size_t *len) {
+  if(!received) {
+    return NULL;
+  }
+
+  received = 0;
+
+  *len = RFM69_read(RFM69_REG_FIFO);
+  if(*len >= sizeof(data)) {
+    *len = sizeof(data) - 1;
+  }
+  data[*len] = 0;
+
+  for(uint8_t i = 0; i < *len; i++) {
+    data[i] = RFM69_read(RFM69_REG_FIFO);
+  }
+
+  return data;
+}
+
 void RFM69_init() {
   spi_init();
 
@@ -103,4 +134,19 @@ void RFM69_init() {
 
   // start sending once fifo has at least one byte
   RFM69_write(RFM69_REG_FIFOTHRESH, 0x80);
+
+  // enable IRQ
+  // Rx - PayloadReady
+  // Tx - TxReady
+  RFM69_write(RFM69_REG_DIOMAPPING1, 0b01 << 6);
+
+  // enable IRQ pin
+  gpio_input(GPIOB, irq_pin);
+  // source is portB
+  EXTI->EXTICR[irq_pin / 4] = 0x01 << ((irq_pin & 3) << 3);
+  // Rising edge
+  EXTI->RTSR1 |= 1U << irq_pin;
+  // unask irq - yeah, we are unasking according to docs ^^
+  EXTI->IMR1 = 1U << irq_pin;
+  NVIC_EnableIRQ(EXTI4_15_IRQn);
 }

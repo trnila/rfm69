@@ -32,10 +32,7 @@ inline void gpio_output(GPIO_TypeDef* base, int pin, int state) {
   gpio_mode(base, pin, 0b01);
 }
 
-inline void gpio_input(GPIO_TypeDef* base, int pin, int state) {
-  gpio_set(base, pin, state);
-  gpio_mode(base, pin, 0b00);
-}
+inline void gpio_input(GPIO_TypeDef* base, int pin) { gpio_mode(base, pin, 0b00); }
 
 inline void gpio_speed(GPIO_TypeDef* base, unsigned int pin, uint8_t speed) {
   base->OSPEEDR |= (speed & 0b11) << (pin << 1);

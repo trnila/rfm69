@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #define RFM69_REG_FIFO 0x00
@@ -95,3 +97,4 @@ void RFM69_write(uint8_t addr, uint8_t val);
 void RFM69_write16(uint8_t addr, uint16_t val);
 uint8_t RFM69_read(uint8_t addr);
 void RFM69_set_mode(RFM69_Mode mode);
+uint8_t* RFM69_readmsg(size_t* len);
