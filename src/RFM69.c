@@ -74,7 +74,6 @@ void EXTI4_15_IRQHandler() {
   received = 1;
   EXTI->RPR1 = 1 << irq_pin;
 }
-
 uint8_t *RFM69_readmsg(size_t *len) {
   if(!received) {
     return NULL;
@@ -82,7 +81,8 @@ uint8_t *RFM69_readmsg(size_t *len) {
 
   received = 0;
 
-  *len = RFM69_read(RFM69_REG_FIFO);
+  *len = RFM69_read(RFM69_REG_FIFO) - 1;
+  RFM69_read(RFM69_REG_FIFO);  // dst
   if(*len >= sizeof(data)) {
     *len = sizeof(data) - 1;
   }
@@ -95,7 +95,7 @@ uint8_t *RFM69_readmsg(size_t *len) {
   return data;
 }
 
-void RFM69_init() {
+void RFM69_init(uint8_t node_id) {
   spi_init();
 
   // wait until it boots and return version
@@ -127,10 +127,11 @@ void RFM69_init() {
   RFM69_write(RFM69_REG_SYNCCONFIG, 0x88);
   RFM69_write16(RFM69_REG_SYNCVALUE1, networkID & 0xFFFFU);
 
-  // variable packet
-  RFM69_write(RFM69_REG_PACKETCONFIG1, 0b10010000);
+  // variable packet, and filter our address
+  RFM69_write(RFM69_REG_PACKETCONFIG1, 0b10010010);
   RFM69_write(RFM69_REG_PAYLOADLENGTH, 1);
   RFM69_write(RFM69_REG_PAYLOADLENGTH, 66);
+  RFM69_write(RFM69_REG_NODEADRS, node_id);
 
   // start sending once fifo has at least one byte
   RFM69_write(RFM69_REG_FIFOTHRESH, 0x80);

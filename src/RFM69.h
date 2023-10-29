@@ -92,7 +92,7 @@ typedef enum {
   RFM69_MODE_RX = 4,
 } RFM69_Mode;
 
-void RFM69_init();
+void RFM69_init(uint8_t node_id);
 void RFM69_write(uint8_t addr, uint8_t val);
 void RFM69_write16(uint8_t addr, uint16_t val);
 uint8_t RFM69_read(uint8_t addr);

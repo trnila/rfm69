@@ -13,8 +13,9 @@ void send_sensor(uint8_t id, uint32_t value) {
 
   // send fifo
   char str[32];
-  snprintf(str, sizeof(str), "%d %lu\r\n", id, value);
-  RFM69_write(RFM69_REG_FIFO, strlen(str));
+  snprintf(str, sizeof(str), "%d %lu\n", id, value);
+  RFM69_write(RFM69_REG_FIFO, strlen(str) + 1);
+  RFM69_write(RFM69_REG_FIFO, 0);  // dst
   for(int i = 0; i < strlen(str); i++) {
     RFM69_write(RFM69_REG_FIFO, str[i]);
   }
@@ -32,7 +33,7 @@ void send_sensor(uint8_t id, uint32_t value) {
 }
 
 void app_main() {
-  RFM69_init();
+  RFM69_init(1);
 
   // for(;;) {
   //   adc_read();

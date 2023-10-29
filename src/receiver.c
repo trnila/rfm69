@@ -17,7 +17,7 @@ void rgb_test() {
 }
 
 void app_main() {
-  RFM69_init();
+  RFM69_init(0);
   rgb_init();
   rgb_set_brightness(10);
 
