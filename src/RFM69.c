@@ -8,10 +8,8 @@
 #define CS_PORT GPIOA
 #define CS_PIN 15
 
-#define RFM69_FIFO_SIZE 66
-
 static volatile bool received = false;
-static uint8_t data[RFM69_FIFO_SIZE];
+static RFM69_Packet packet;
 static const uint32_t irq_pin = 6;
 
 void spi_init() {
@@ -74,25 +72,25 @@ void EXTI4_15_IRQHandler() {
   received = 1;
   EXTI->RPR1 = 1 << irq_pin;
 }
-uint8_t *RFM69_readmsg(size_t *len) {
+RFM69_Packet *RFM69_read_packet() {
   if(!received) {
     return NULL;
   }
 
   received = 0;
 
-  *len = RFM69_read(RFM69_REG_FIFO) - 1;
-  RFM69_read(RFM69_REG_FIFO);  // dst
-  if(*len >= sizeof(data)) {
-    *len = sizeof(data) - 1;
+  uint8_t len = RFM69_read(RFM69_REG_FIFO);
+  if(len >= sizeof(packet)) {
+    len = sizeof(packet) - 1;
   }
-  data[*len] = 0;
+  packet.hdr.length = len;
 
-  for(uint8_t i = 0; i < *len; i++) {
-    data[i] = RFM69_read(RFM69_REG_FIFO);
+  uint8_t *ptr = (uint8_t *)&packet + 1;
+  for(uint8_t i = 0; i < len; i++) {
+    ptr[i] = RFM69_read(RFM69_REG_FIFO);
   }
 
-  return data;
+  return &packet;
 }
 
 void RFM69_init(uint8_t node_id) {

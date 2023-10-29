@@ -85,6 +85,8 @@
 #define RFM69_REG_TESTPA2 0x5C
 #define RFM69_REG_TESTDAGC 0x6F
 
+#define RFM69_FIFO_SIZE 66
+
 typedef enum {
   RFM69_MODE_SLEEP = 0,
   RFM69_MODE_STANDBY = 1,
@@ -92,9 +94,25 @@ typedef enum {
   RFM69_MODE_RX = 4,
 } RFM69_Mode;
 
+typedef struct {
+  uint8_t length;
+  uint8_t dst;
+  uint8_t src;
+  uint8_t seq;
+} RFM69_Header;
+
+typedef struct {
+  RFM69_Header hdr;
+  uint8_t payload[RFM69_FIFO_SIZE - 4];
+} RFM69_Packet;
+
+typedef enum {
+  RFM69_CMD_MEASUREMENT,
+} RFM69_CMD;
+
 void RFM69_init(uint8_t node_id);
 void RFM69_write(uint8_t addr, uint8_t val);
 void RFM69_write16(uint8_t addr, uint16_t val);
 uint8_t RFM69_read(uint8_t addr);
 void RFM69_set_mode(RFM69_Mode mode);
-uint8_t* RFM69_readmsg(size_t* len);
+RFM69_Packet* RFM69_read_packet();

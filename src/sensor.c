@@ -8,16 +8,29 @@
 #include "stm32g031xx.h"
 #include "uart.h"
 
+static const uint8_t node_id = 1;
+static RFM69_Packet tx_packet;
+
 void send_sensor(uint8_t id, uint32_t value) {
   RFM69_set_mode(RFM69_MODE_STANDBY);
 
   // send fifo
-  char str[32];
-  snprintf(str, sizeof(str), "%d %lu\n", id, value);
-  RFM69_write(RFM69_REG_FIFO, strlen(str) + 1);
-  RFM69_write(RFM69_REG_FIFO, 0);  // dst
-  for(int i = 0; i < strlen(str); i++) {
-    RFM69_write(RFM69_REG_FIFO, str[i]);
+  uint8_t payload_len = 1 + 1 + sizeof(uint32_t);
+  tx_packet.hdr.length = sizeof(tx_packet.hdr) - 1 + payload_len;
+  tx_packet.hdr.dst = 0;
+  tx_packet.hdr.src = node_id;
+  tx_packet.hdr.seq = 0;
+
+  tx_packet.payload[0] = RFM69_CMD_MEASUREMENT;
+  tx_packet.payload[1] = id;
+  tx_packet.payload[2] = value;
+  tx_packet.payload[3] = value >> 8;
+  tx_packet.payload[4] = value >> 16;
+  tx_packet.payload[5] = value >> 24;
+
+  uint8_t *ptr = (uint8_t *)&tx_packet;
+  for(size_t i = 0; i < tx_packet.hdr.length + 1; i++) {
+    RFM69_write(RFM69_REG_FIFO, ptr[i]);
   }
 
   RFM69_set_mode(RFM69_MODE_TX);
@@ -33,7 +46,7 @@ void send_sensor(uint8_t id, uint32_t value) {
 }
 
 void app_main() {
-  RFM69_init(1);
+  RFM69_init(node_id);
 
   // for(;;) {
   //   adc_read();

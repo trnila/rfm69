@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "RFM69.h"
 #include "gpio.h"
 #include "rgb.h"
@@ -25,11 +27,12 @@ void app_main() {
   RFM69_set_mode(RFM69_MODE_RX);
 
   for(;;) {
-    size_t len;
-    uint8_t *data = RFM69_readmsg(&len);
-    if(data) {
-      data[len] = 0;
-      uart_send((char *)data);
+    RFM69_Packet *packet = RFM69_read_packet();
+    if(packet) {
+      char buf[32];
+      snprintf(buf, sizeof(buf), "%d %d\n", packet->payload[1],
+               packet->payload[2] | (packet->payload[3] << 8) | (packet->payload[4] << 16) | packet->payload[5] << 24);
+      uart_send(buf);
     }
   }
 }
