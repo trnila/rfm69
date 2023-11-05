@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "RFM69.h"
 #include "gpio.h"
@@ -23,15 +24,14 @@ void app_main() {
   rgb_init();
   rgb_set_brightness(10);
 
-  // rx
-  RFM69_set_mode(RFM69_MODE_RX);
-
   for(;;) {
     RFM69_Packet *packet = RFM69_read_packet();
     if(packet) {
       char buf[32];
-      snprintf(buf, sizeof(buf), "%d %d\n", packet->payload[1],
+      snprintf(buf, sizeof(buf), "%d %d %d\n", packet->hdr.flags.seq, packet->payload[1],
                packet->payload[2] | (packet->payload[3] << 8) | (packet->payload[4] << 16) | packet->payload[5] << 24);
+
+      RFM69_rxbuf_return();
       uart_send(buf);
     }
   }
