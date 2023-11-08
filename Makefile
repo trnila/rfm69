@@ -14,7 +14,8 @@ SRC = \
 	src/rgb.c \
 	src/RFM69.c \
 	src/adc.c \
-	src/uart.c
+	src/uart.c \
+	src/timer.c
 
 CFLAGS += \
 	-mcpu=cortex-m0plus \

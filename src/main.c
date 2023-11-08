@@ -3,6 +3,7 @@
 #include "adc.h"
 #include "gpio.h"
 #include "stm32g031xx.h"
+#include "timer.h"
 #include "uart.h"
 
 uint32_t SystemCoreClock = 16000000UL;
@@ -33,6 +34,8 @@ int main(void) {
   gpio_output(GPIOC, 6, 0);
 
   RCC->AHBENR |= RCC_AHBENR_DMA1EN;
+
+  timer_init();
 
   uart_init();
 
