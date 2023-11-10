@@ -11,6 +11,8 @@
 
 static const uint8_t node_id = 1;
 extern RFM69_Packet *tx_packet;
+GPIO_TypeDef *irq_port = GPIOB;
+const uint32_t irq_pin = 1;
 
 void send_sensor(uint8_t id, uint32_t value) {
   uint8_t *payload = RFM69_get_tx_payload();
@@ -28,12 +30,21 @@ void send_sensor(uint8_t id, uint32_t value) {
   RFM69_send_packet(0, true, 1 + 1 + sizeof(uint32_t));
 }
 
+void EXTI0_1_IRQHandler() { EXTI->RPR1 = 1 << irq_pin; }
+
 void app_main() {
   RFM69_init(node_id);
 
-  // for(;;) {
-  //   adc_read();
-  // }
+  // enable IRQ pin
+  gpio_input(irq_port, irq_pin);
+  gpio_pulldown(irq_port, irq_pin);
+  // source is portB
+  EXTI->EXTICR[irq_pin / 4] = 0x01 << ((irq_pin & 3) << 3);
+  // Rising edge
+  EXTI->RTSR1 |= 1U << irq_pin;
+  // unask irq - yeah, we are unasking according to docs ^^
+  EXTI->IMR1 |= 1U << irq_pin;
+  NVIC_EnableIRQ(EXTI0_1_IRQn);
 
   uint32_t last_measurement_ms = ((uint32_t)-1) / 2;
   for(;;) {
@@ -51,6 +62,7 @@ void app_main() {
       send_sensor(SENSOR_SOLAR_VOLTAGE, m.solar_V_mV);
       send_sensor(SENSOR_VBAT, m.vbat_mV);
       send_sensor(SENSOR_VREF, m.vref_mV);
+      send_sensor(SENSOR_WINDOW, !gpio_read(irq_port, irq_pin));
 
       /*
       send_sensor(0, counter);

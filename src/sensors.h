@@ -7,3 +7,4 @@
 #define SENSOR_BATERKA 6
 #define SENSOR_VREF 7
 #define SENSOR_VBAT 8
+#define SENSOR_WINDOW 9

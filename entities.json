@@ -51,5 +51,10 @@
         "name": "VBAT",
         "device_class": "voltage",
         "unit_of_measurement": "mV"
+    },
+    {
+        "type": "cover",
+        "name": "Window",
+        "device_class": "window"
     }
 ]
