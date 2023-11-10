@@ -39,3 +39,13 @@ inline void gpio_input(GPIO_TypeDef* base, int pin) { gpio_mode(base, pin, 0b00)
 inline void gpio_speed(GPIO_TypeDef* base, unsigned int pin, uint8_t speed) {
   base->OSPEEDR |= (speed & 0b11) << (pin << 1);
 }
+
+inline void gpio_pullup(GPIO_TypeDef* base, unsigned int pin) {
+  const unsigned int shift = pin << 1;
+  base->PUPDR = (base->PUPDR & ~(0b11 << shift)) | (0b01 << shift);
+}
+
+inline void gpio_pulldown(GPIO_TypeDef* base, unsigned int pin) {
+  const unsigned int shift = pin << 1;
+  base->PUPDR = (base->PUPDR & ~(0b11 << shift)) | (0b10 << shift);
+}
