@@ -6,6 +6,7 @@
 #include "gpio.h"
 #include "sensors.h"
 #include "stm32g031xx.h"
+#include "timer.h"
 #include "uart.h"
 
 static const uint8_t node_id = 1;
@@ -34,13 +35,14 @@ void app_main() {
   //   adc_read();
   // }
 
-  uint32_t counter = 0;
+  uint32_t last_measurement_ms = ((uint32_t)-1) / 2;
   for(;;) {
     if(RFM69_read_packet()) {
       RFM69_rxbuf_return();
     }
 
-    if(counter % 100000 == 0) {
+    if((tick_ms - last_measurement_ms) > 1000) {
+      last_measurement_ms = tick_ms;
       adc_measurements_t m;
       adc_read(&m);
 
@@ -60,7 +62,5 @@ void app_main() {
       send_sensor(6, 100 - counter % 100);
       */
     }
-
-    counter++;
   }
 }
