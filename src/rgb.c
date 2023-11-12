@@ -1,5 +1,6 @@
 #include "rgb.h"
 
+#include <stdbool.h>
 #include <string.h>
 
 #include "gpio.h"
@@ -13,23 +14,36 @@ static uint8_t data[NUM_PIXELS * 3 * 8];
 static uint8_t HIGH;
 static uint8_t LOW;
 static float brightness = 255;
+static volatile bool updated = 0;
 
-void rgb_set_brightness(uint8_t br) { brightness = br; }
+void rgb_set_brightness(uint8_t br) {
+  brightness = br;
+  updated = true;
+}
 
 void rgb_set(size_t pos, uint8_t r, uint8_t g, uint8_t b) {
   size_t offset = pos * 3 * 8;
-  uint8_t rgb[] = {g * brightness / 255.0, r * brightness / 255.0,
-                   b * brightness / 255.0};
+  uint8_t rgb[] = {g * brightness / 255.0, r * brightness / 255.0, b * brightness / 255.0};
   for(int c = 0; c < 3; c++) {
     for(int bit = 7; bit; bit--) {
       data[offset++] = (rgb[c] & (1U << bit)) ? HIGH : LOW;
     }
   }
+
+  updated = true;
 }
 
-void rgb_clear() { memset(data, LOW, sizeof(data)); }
+void rgb_clear() {
+  memset(data, LOW, sizeof(data));
+  updated = true;
+}
 
 void rgb_update() {
+  if(!updated || (TIM1->DIER & TIM_DIER_CC1DE)) {
+    return;
+  }
+  updated = false;
+
   TIM1->BDTR |= TIM_BDTR_MOE;
 
   TIM1->CCER |= TIM_CCER_CC1E;
@@ -38,9 +52,8 @@ void rgb_update() {
   DMA1_Channel1->CNDTR = sizeof(data);
   DMA1_Channel1->CMAR = (uint32_t)data;
   DMA1_Channel1->CPAR = (uint32_t)&TIM1->CCR1;
-  DMA1_Channel1->CCR = DMA_CCR_EN | DMA_CCR_TEIE | DMA_CCR_TCIE | DMA_CCR_DIR |
-                       DMA_CCR_MINC | (0b01 << DMA_CCR_PSIZE_Pos) |
-                       (0b11 << DMA_CCR_PL_Pos);
+  DMA1_Channel1->CCR = DMA_CCR_EN | DMA_CCR_TEIE | DMA_CCR_TCIE | DMA_CCR_DIR | DMA_CCR_MINC |
+                       (0b01 << DMA_CCR_PSIZE_Pos) | (0b11 << DMA_CCR_PL_Pos);
 
   TIM1->DIER |= TIM_DIER_CC1DE;
 }
