@@ -27,6 +27,8 @@ inline void gpio_set(GPIO_TypeDef* base, int pin, int state) {
   }
 }
 
+inline unsigned int gpio_read(GPIO_TypeDef* base, int pin) { return (base->IDR & (1U << pin)) > 0; }
+
 inline void gpio_output(GPIO_TypeDef* base, int pin, int state) {
   gpio_set(base, pin, state);
   gpio_mode(base, pin, 0b01);
