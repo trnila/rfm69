@@ -14,20 +14,14 @@ extern RFM69_Packet *tx_packet;
 GPIO_TypeDef *irq_port = GPIOB;
 const uint32_t irq_pin = 1;
 
-void send_sensor(uint8_t id, uint32_t value) {
-  uint8_t *payload = RFM69_get_tx_payload();
-  if(!payload) {
-    return;
-  }
-
-  payload[0] = RFM69_CMD_MEASUREMENT;
-  payload[1] = id;
-  payload[2] = value;
-  payload[3] = value >> 8;
-  payload[4] = value >> 16;
-  payload[5] = value >> 24;
-
-  RFM69_send_packet(0, true, 1 + 1 + sizeof(uint32_t));
+void add_measurement(uint8_t *payload, size_t *offset, uint8_t id, uint32_t value) {
+  payload[(*offset)++] = RFM69_CMD_MEASUREMENT;
+  payload[(*offset)++] = id;
+  payload[(*offset)++] = value;
+  payload[(*offset)++] = value >> 8;
+  payload[(*offset)++] = value >> 16;
+  payload[(*offset)++] = value >> 24;
+  assert(*offset < RFM69_FIFO_SIZE);
 }
 
 void EXTI0_1_IRQHandler() { EXTI->RPR1 = 1 << irq_pin; }
@@ -57,22 +51,17 @@ void app_main() {
       adc_measurements_t m;
       adc_read(&m);
 
-      send_sensor(SENSOR_BATTERY_CURRENT, m.bat_I_mV);
-      send_sensor(SENSOR_BATTERY_VOLTAGE, m.bat_V_mV);
-      send_sensor(SENSOR_SOLAR_VOLTAGE, m.solar_V_mV);
-      send_sensor(SENSOR_VBAT, m.vbat_mV);
-      send_sensor(SENSOR_VREF, m.vref_mV);
-      send_sensor(SENSOR_WINDOW, !gpio_read(irq_port, irq_pin));
-
-      /*
-      send_sensor(0, counter);
-      send_sensor(1, counter * 10);
-      send_sensor(2, counter * 100);
-      send_sensor(3, counter % 40);
-      send_sensor(4, counter % 100);
-      send_sensor(5, counter % 10 < 5);
-      send_sensor(6, 100 - counter % 100);
-      */
+      uint8_t *payload = RFM69_get_tx_payload();
+      if(payload) {
+        size_t offset = 0;
+        add_measurement(payload, &offset, SENSOR_BATTERY_CURRENT, m.bat_I_mV);
+        add_measurement(payload, &offset, SENSOR_BATTERY_VOLTAGE, m.bat_V_mV);
+        add_measurement(payload, &offset, SENSOR_SOLAR_VOLTAGE, m.solar_V_mV);
+        add_measurement(payload, &offset, SENSOR_VBAT, m.vbat_mV);
+        add_measurement(payload, &offset, SENSOR_VREF, m.vref_mV);
+        add_measurement(payload, &offset, SENSOR_WINDOW, !gpio_read(irq_port, irq_pin));
+        RFM69_send_packet(0, true, offset);
+      }
     }
   }
 }

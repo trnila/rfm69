@@ -4,6 +4,7 @@
 #include "RFM69.h"
 #include "gpio.h"
 #include "rgb.h"
+#include "sensors.h"
 #include "stm32g031xx.h"
 #include "timer.h"
 #include "uart.h"
@@ -37,6 +38,24 @@ typedef struct {
 
 Room room_last_updated[sizeof(map)];
 
+static void handle_measurement(uint8_t src, uint8_t seq, uint8_t sensor_id, uint32_t value) {
+  if(sensor_id == SENSOR_WINDOW) {
+    for(size_t i = 0; i < sizeof(map) / sizeof(map[0]); i++) {
+      if(map[i] == src) {
+        bool open = value != 1;
+        room_last_updated[i].state = open ? WINDOW_OPEN : WINDOW_CLOSED;
+        room_last_updated[i].last_update = tick_ms;
+        rgb_set(i, 255 * open, 0, 0);
+        break;
+      }
+    }
+  }
+
+  char buf[32];
+  snprintf(buf, sizeof(buf), "%d %d %ld\n", seq, sensor_id, value);
+  uart_send(buf);
+}
+
 void app_main() {
   RFM69_init(0);
   rgb_init();
@@ -49,24 +68,18 @@ void app_main() {
   for(;;) {
     RFM69_Packet *packet = RFM69_read_packet();
     if(packet) {
-      if(packet->payload[1] == 9) {
-        for(size_t i = 0; i < sizeof(map) / sizeof(map[0]); i++) {
-          if(map[i] == packet->hdr.src) {
-            bool closed = packet->payload[2];
-            room_last_updated[i].state = closed ? WINDOW_CLOSED : WINDOW_OPEN;
-            room_last_updated[i].last_update = tick_ms;
-            rgb_set(i, 255 * !closed, 0, 0);
-            break;
-          }
+      size_t offset = 0;
+      while(offset < (packet->hdr.length - sizeof(packet->hdr) + 1)) {
+        const uint8_t *data = &packet->payload[offset];
+        if(data[0] == RFM69_CMD_MEASUREMENT) {
+          uint32_t value = data[2] | (data[3] << 8) | (data[4] << 16) | data[5] << 24;
+          handle_measurement(packet->hdr.src, packet->hdr.flags.seq, data[1], value);
+          offset += 2 + 4;
+        } else {
+          assert(0);
         }
       }
-
-      char buf[32];
-      snprintf(buf, sizeof(buf), "%d %d %d\n", packet->hdr.flags.seq, packet->payload[1],
-               packet->payload[2] | (packet->payload[3] << 8) | (packet->payload[4] << 16) | packet->payload[5] << 24);
-
       RFM69_rxbuf_return();
-      uart_send(buf);
     }
 
     for(size_t i = 0; i < sizeof(map) / sizeof(map[0]); i++) {
