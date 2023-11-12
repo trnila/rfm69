@@ -27,14 +27,23 @@ def start_gw():
             line = s.readline().strip().decode('utf-8')
             print(line)
             parts = line.split(' ')
-            if len(parts) != 2:
+            if len(parts) != 3:
+                print("SKIP")
                 continue
 
-            id, val = parts
+            seq, id, val = parts
 
             entity = entities[int(id)]
             if entity['type'] == 'binary_sensor':
                 val = 'ON' if int(val) else 'OFF'
+            elif entity['type'] == 'cover':
+                val = int(val)
+                vals = ['open', 'closed', 'opening', 'closing', 'stopped']
+                if val < len(vals):
+                    val = vals[val]
+                else:
+                    print("Invalid value for cover:", val)
+                    continue
 
             client.publish(entity['state_topic'], val)
         except UnicodeDecodeError as e:
