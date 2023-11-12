@@ -13,7 +13,7 @@ static uint8_t data[NUM_PIXELS * 3 * 8];
 
 static uint8_t HIGH;
 static uint8_t LOW;
-static float brightness = 255;
+static uint8_t brightness = 255;
 static volatile bool updated = 0;
 
 void rgb_set_brightness(uint8_t br) {
@@ -23,7 +23,8 @@ void rgb_set_brightness(uint8_t br) {
 
 void rgb_set(size_t pos, uint8_t r, uint8_t g, uint8_t b) {
   size_t offset = pos * 3 * 8;
-  uint8_t rgb[] = {g * brightness / 255.0, r * brightness / 255.0, b * brightness / 255.0};
+  uint8_t rgb[] = {(unsigned int)g * brightness / 255U, (unsigned int)r * brightness / 255U,
+                   (unsigned int)b * brightness / 255U};
   for(int c = 0; c < 3; c++) {
     for(int bit = 7; bit; bit--) {
       data[offset++] = (rgb[c] & (1U << bit)) ? HIGH : LOW;
