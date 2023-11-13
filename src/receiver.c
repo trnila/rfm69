@@ -9,6 +9,15 @@
 #include "timer.h"
 #include "uart.h"
 
+#define MAX_ROOMS 23
+
+typedef struct {
+  uint8_t node_count;
+  uint8_t node_to_led[MAX_ROOMS];
+} Config;
+
+const Config *config = (const Config *)0x0800F800;
+
 void rgb_test() {
   for(int color = 0; color < 4; color++) {
     for(int led = 0; led < 23; led++) {
@@ -21,10 +30,6 @@ void rgb_test() {
   }
 }
 
-const uint8_t map[23] = {
-    0, 0, 0, 0, 1,
-};
-
 typedef enum {
   WINDOW_OPEN,
   WINDOW_CLOSED,
@@ -36,12 +41,12 @@ typedef struct {
   uint32_t last_update;
 } Room;
 
-Room room_last_updated[sizeof(map)];
+Room room_last_updated[MAX_ROOMS];
 
 static void handle_measurement(uint8_t src, uint8_t seq, uint8_t sensor_id, uint32_t value) {
   if(sensor_id == SENSOR_WINDOW) {
-    for(size_t i = 0; i < sizeof(map) / sizeof(map[0]); i++) {
-      if(map[i] == src) {
+    for(size_t i = 0; i < config->node_count; i++) {
+      if(config->node_to_led[i] == src) {
         bool open = value != 1;
         room_last_updated[i].state = open ? WINDOW_OPEN : WINDOW_CLOSED;
         room_last_updated[i].last_update = tick_ms;
@@ -58,10 +63,11 @@ static void handle_measurement(uint8_t src, uint8_t seq, uint8_t sensor_id, uint
 
 void app_main() {
   RFM69_init(0);
-  rgb_init();
+  assert(config->node_count <= MAX_ROOMS);
+  rgb_init(config->node_count);
   rgb_set_brightness(10);
 
-  for(size_t i = 0; i < sizeof(map); i++) {
+  for(size_t i = 0; i < config->node_count; i++) {
     rgb_set(i, 255, 255, 0);
   }
 
@@ -82,7 +88,7 @@ void app_main() {
       RFM69_rxbuf_return();
     }
 
-    for(size_t i = 0; i < sizeof(map) / sizeof(map[0]); i++) {
+    for(size_t i = 0; i < config->node_count; i++) {
       if(tick_ms - room_last_updated[i].last_update > 5000 && room_last_updated[i].state != WINDOW_TIMEDOUT) {
         rgb_set(i, 255, 255, 0);
         room_last_updated[i].state = WINDOW_TIMEDOUT;

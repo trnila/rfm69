@@ -9,7 +9,16 @@
 #include "timer.h"
 #include "uart.h"
 
-static const uint8_t node_id = 1;
+typedef struct {
+  uint8_t node_id;
+  uint8_t key[8];
+} Radio;
+
+typedef struct {
+  Radio radio;
+} Config;
+
+const Config *config = (const Config *)0x0800F800;
 extern RFM69_Packet *tx_packet;
 GPIO_TypeDef *irq_port = GPIOB;
 const uint32_t irq_pin = 1;
@@ -27,7 +36,7 @@ void add_measurement(uint8_t *payload, size_t *offset, uint8_t id, uint32_t valu
 void EXTI0_1_IRQHandler() { EXTI->RPR1 = 1 << irq_pin; }
 
 void app_main() {
-  RFM69_init(node_id);
+  RFM69_init(config->radio.node_id);
 
   // enable IRQ pin
   gpio_input(irq_port, irq_pin);

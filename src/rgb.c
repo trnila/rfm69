@@ -7,13 +7,15 @@
 #include "stm32g031xx.h"
 
 #define GPIO_AF2_TIM1 2
-#define NUM_PIXELS 23
+#define MAX_LED_COUNT 23U
+#define BYTES_PER_LED (8U * 3U)
 
-static uint8_t data[NUM_PIXELS * 3 * 8];
+static uint8_t data[MAX_LED_COUNT * BYTES_PER_LED];
 
 static uint8_t HIGH;
 static uint8_t LOW;
 static uint8_t brightness = 255;
+static uint8_t leds_count;
 static volatile bool updated = 0;
 
 void rgb_set_brightness(uint8_t br) {
@@ -22,7 +24,9 @@ void rgb_set_brightness(uint8_t br) {
 }
 
 void rgb_set(size_t pos, uint8_t r, uint8_t g, uint8_t b) {
-  size_t offset = pos * 3 * 8;
+  assert(pos < leds_count);
+
+  size_t offset = pos * BYTES_PER_LED;
   uint8_t rgb[] = {(unsigned int)g * brightness / 255U, (unsigned int)r * brightness / 255U,
                    (unsigned int)b * brightness / 255U};
   for(int c = 0; c < 3; c++) {
@@ -50,7 +54,7 @@ void rgb_update() {
   TIM1->CCER |= TIM_CCER_CC1E;
 
   TIM1->CR1 |= TIM_CR1_CEN;
-  DMA1_Channel1->CNDTR = sizeof(data);
+  DMA1_Channel1->CNDTR = leds_count * BYTES_PER_LED;
   DMA1_Channel1->CMAR = (uint32_t)data;
   DMA1_Channel1->CPAR = (uint32_t)&TIM1->CCR1;
   DMA1_Channel1->CCR = DMA_CCR_EN | DMA_CCR_TEIE | DMA_CCR_TCIE | DMA_CCR_DIR | DMA_CCR_MINC |
@@ -59,7 +63,10 @@ void rgb_update() {
   TIM1->DIER |= TIM_DIER_CC1DE;
 }
 
-void rgb_init(void) {
+void rgb_init(uint8_t count) {
+  assert(count <= MAX_LED_COUNT);
+  leds_count = count;
+
   NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 
   // enable clock
