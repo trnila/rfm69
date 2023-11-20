@@ -1,32 +1,61 @@
 {
     "version": "0.2.0",
-    "configurations": [{
-        "name": "receiver",
-        "cwd": "${workspaceRoot}",
-        "executable": "${workspaceRoot}/build/receiver.elf",
-        "request": "launch",
-        "type": "cortex-debug",
-        "servertype": "openocd",
-        "device": "STM32G031",
-        "configFiles": ["interface/stlink.cfg", "target/stm32g0x.cfg"],
-        "openOCDLaunchCommands": ["hla_serial 066EFF313541483043183849"],
-        "toolchainPrefix": "arm-none-eabi",
-        "preLaunchTask": "build",
-        "svdFile": "./docs/STM32G031.svd"
-    },
-    {
-        "name": "sensor",
-        "cwd": "${workspaceRoot}",
-        "executable": "${workspaceRoot}/build/sensor.elf",
-        "request": "launch",
-        "type": "cortex-debug",
-        "servertype": "openocd",
-        "device": "STM32G031",
-        "configFiles": ["interface/stlink.cfg", "target/stm32g0x.cfg"],
-        "openOCDLaunchCommands": ["hla_serial 066EFF363946433043085449"],
-        "toolchainPrefix": "arm-none-eabi",
-        "preLaunchTask": "build",
-        "svdFile": "./docs/STM32G031.svd"
-    }
-]
+    "configurations": [
+        {
+            "name": "receiver",
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceRoot}/build/receiver.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "STM32G031",
+            "configFiles": ["interface/stlink.cfg", "target/stm32g0x.cfg"],
+            "openOCDLaunchCommands": ["hla_serial 0668FF313541483043194116"],
+            "toolchainPrefix": "arm-none-eabi",
+            "preLaunchTask": "build",
+            "svdFile": "./docs/STM32G031.svd"
+        },
+        {
+            "name": "sensor0",
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceRoot}/build/sensor.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "STM32G031",
+            "configFiles": ["interface/stlink.cfg", "target/stm32g0x.cfg"],
+            "openOCDLaunchCommands": ["hla_serial 066EFF363946433043085449"],
+            "toolchainPrefix": "arm-none-eabi",
+            "preLaunchTask": "build",
+            "svdFile": "./docs/STM32G031.svd"
+        },
+        {
+            "name": "sensor1",
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceRoot}/build/sensor.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "STM32G031",
+            "configFiles": ["interface/stlink.cfg", "target/stm32g0x.cfg"],
+            "openOCDLaunchCommands": ["hla_serial 066EFF313541483043183849"],
+            "toolchainPrefix": "arm-none-eabi",
+            "preLaunchTask": "build",
+            "svdFile": "./docs/STM32G031.svd"
+        },
+        {
+            "name": "sensor2",
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceRoot}/build/sensor.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "STM32G031",
+            "configFiles": ["interface/stlink.cfg", "target/stm32g0x.cfg"],
+            "openOCDLaunchCommands": ["hla_serial 066FFF313541483043251644"],
+            "toolchainPrefix": "arm-none-eabi",
+            "preLaunchTask": "build",
+            "svdFile": "./docs/STM32G031.svd"
+        }
+    ]
 }
