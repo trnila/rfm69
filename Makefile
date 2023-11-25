@@ -10,7 +10,6 @@ BIN = $(CP) -O binary -S
 
 SRC = \
 	src/startup.c \
-	src/main.c \
 	src/rgb.c \
 	src/RFM69.c \
 	src/adc.c \

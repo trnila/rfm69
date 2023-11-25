@@ -61,7 +61,15 @@ static void handle_measurement(uint8_t src, uint8_t seq, uint8_t sensor_id, uint
   uart_send(buf);
 }
 
-void app_main() {
+void main() {
+  RCC->IOPENR |= RCC_IOPENR_GPIOAEN;
+  RCC->IOPENR |= RCC_IOPENR_GPIOBEN;
+  RCC->IOPENR |= RCC_IOPENR_GPIOCEN;
+  RCC->AHBENR |= RCC_AHBENR_DMA1EN;
+
+  timer_init();
+  uart_init();
+
   RFM69_init(0);
   assert(config->node_count <= MAX_ROOMS);
   rgb_init(config->node_count);
