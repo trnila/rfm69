@@ -62,12 +62,13 @@ static void handle_measurement(uint8_t src, uint8_t seq, uint8_t sensor_id, uint
 }
 
 void main() {
+  const uint32_t SYSCLK = 16000000UL;
   RCC->IOPENR |= RCC_IOPENR_GPIOAEN;
   RCC->IOPENR |= RCC_IOPENR_GPIOBEN;
   RCC->IOPENR |= RCC_IOPENR_GPIOCEN;
   RCC->AHBENR |= RCC_AHBENR_DMA1EN;
 
-  timer_init();
+  timer_init(SYSCLK);
   uart_init();
 
   RFM69_init(0);

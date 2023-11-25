@@ -8,7 +8,7 @@ typedef struct timer timer;
 
 typedef void (*timer_callback)(timer* t);
 
-void timer_init();
+void timer_init(uint32_t sysclk_freq);
 
 timer* timer_create();
 void timer_oneshot(timer* t, uint32_t delay_ms, timer_callback cb);

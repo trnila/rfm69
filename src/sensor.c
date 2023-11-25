@@ -36,12 +36,16 @@ void add_measurement(uint8_t *payload, size_t *offset, uint8_t id, uint32_t valu
 void EXTI0_1_IRQHandler() { EXTI->RPR1 = 1 << irq_pin; }
 
 void main() {
+  const uint32_t SYSCLK_prescaler = 4;
+  const uint32_t SYSCLK = 16000000UL / (1U << SYSCLK_prescaler);
+  RCC->CR |= SYSCLK_prescaler << RCC_CR_HSIDIV_Pos;
+
   RCC->IOPENR |= RCC_IOPENR_GPIOAEN;
   RCC->IOPENR |= RCC_IOPENR_GPIOBEN;
   RCC->IOPENR |= RCC_IOPENR_GPIOCEN;
   RCC->AHBENR |= RCC_AHBENR_DMA1EN;
 
-  timer_init();
+  timer_init(SYSCLK);
   uart_init();
   adc_init();
 

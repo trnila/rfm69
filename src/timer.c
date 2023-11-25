@@ -31,10 +31,9 @@ void SysTick_Handler() {
   }
 }
 
-void timer_init() {
+void timer_init(uint32_t sysclk_freq) {
   NVIC_EnableIRQ(SysTick_IRQn);
-  // SYSCLK (HSI 16M) / AHB prescaler (1) / 8 (systick source 1)
-  uint32_t systick_freq = 16000000U / 1U / 8U;
+  uint32_t systick_freq = sysclk_freq / 8U;
   SysTick->LOAD = systick_freq * 1U / 1000U;
   SysTick->VAL = 0;
   SysTick->CTRL = SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;
