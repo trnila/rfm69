@@ -3,7 +3,7 @@
 
 #define GPIO_AF1_USART2 1
 
-void uart_init() {
+void uart_init(uint32_t clk_in, uint32_t bauds) {
   /**USART2 GPIO Configuration
   PA2     ------> USART2_TX
   PA3     ------> USART2_RX
@@ -13,11 +13,7 @@ void uart_init() {
 
   RCC->APBENR1 |= RCC_APBENR1_USART2EN;
 
-  const uint32_t clk_in = 16000000U;
-  const uint32_t bauds = 115200;
-  const uint32_t prescaler = 1;
-  USART2->BRR = (clk_in / prescaler + bauds / 2) / bauds;
-
+  USART2->BRR = (clk_in + bauds / 2) / bauds;
   USART2->CR1 = USART_CR1_TE | USART_CR1_UE;
   USART2->CR2 = 0;
   USART2->CR3 = 0;

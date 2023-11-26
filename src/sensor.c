@@ -46,7 +46,7 @@ void main() {
   RCC->AHBENR |= RCC_AHBENR_DMA1EN;
 
   timer_init(SYSCLK);
-  uart_init();
+  uart_init(SYSCLK, 9600U);
   adc_init();
 
   RFM69_init(config->radio.node_id);

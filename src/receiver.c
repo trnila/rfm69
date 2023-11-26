@@ -69,7 +69,7 @@ void main() {
   RCC->AHBENR |= RCC_AHBENR_DMA1EN;
 
   timer_init(SYSCLK);
-  uart_init();
+  uart_init(SYSCLK, 115200U);
 
   RFM69_init(0);
   assert(config->node_count <= MAX_ROOMS);
