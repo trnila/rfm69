@@ -52,10 +52,44 @@ void main() {
   RTC->SCR |= RTC_SCR_CWUTF;
 
   timer_init(SYSCLK);
+
+  gpio_output(GPIOC, 6, 1);
+  while(tick_ms < 100)
+    ;
+  gpio_output(GPIOC, 6, 0);
+  while(tick_ms < 200)
+    ;
+  gpio_output(GPIOC, 6, 1);
+  while(tick_ms < 300)
+    ;
+  gpio_output(GPIOC, 6, 0);
+
+  RTC->CR &= ~RTC_CR_WUTE;
+  while(!(RTC->ICSR & RTC_ICSR_WUTWF))
+    ;
+  RTC->CR |= 0b100 << RTC_CR_WUCKSEL_Pos;
+  RTC->WUTR = 5;
+  // RTC->CR |= RTC_CR_WUTE | RTC_CR_WUTIE;
+
+  PWR->CR3 |= PWR_CR3_EWUP1;
+
+  PWR->SCR |= PWR_SCR_CWUF;
+  // enter shutdown mode
+  PWR->CR1 |= 0b100 << PWR_CR1_LPMS_Pos;
+  SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+
+  for(;;) {
+    __WFI();
+  }
+}
+
+#if 0
+
+  timer_init(SYSCLK);
   uart_init();
   // adc_init();
 
-  RFM69_init(config->radio.node_id);
+  //RFM69_init(config->radio.node_id);
 
   // enable IRQ pin
   gpio_input(irq_port, irq_pin);
@@ -64,6 +98,7 @@ void main() {
   // adc_measurements_t m;
   // adc_read(&m);
 
+  /*
   uint8_t *payload = RFM69_get_tx_payload();
   if(payload) {
     size_t offset = 0;
@@ -78,6 +113,7 @@ void main() {
 
   while(RFM69_get_tx_payload() == NULL)
     ;
+    */
 
   RTC->CR &= ~RTC_CR_WUTE;
   while(!(RTC->ICSR & RTC_ICSR_WUTWF))
@@ -97,3 +133,5 @@ void main() {
     __WFI();
   }
 }
+
+#endif
