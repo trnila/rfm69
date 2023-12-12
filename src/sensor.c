@@ -20,8 +20,8 @@ typedef struct {
 
 const Config *config = (const Config *)0x0800F800;
 extern RFM69_Packet *tx_packet;
-GPIO_TypeDef *irq_port = GPIOB;
-const uint32_t irq_pin = 1;
+GPIO_TypeDef *window_port = GPIOA;
+const uint32_t window_pin = 0;
 
 void add_measurement(uint8_t *payload, size_t *offset, uint8_t id, uint32_t value) {
   payload[(*offset)++] = RFM69_CMD_MEASUREMENT;
@@ -32,8 +32,6 @@ void add_measurement(uint8_t *payload, size_t *offset, uint8_t id, uint32_t valu
   payload[(*offset)++] = value >> 24;
   assert(*offset < RFM69_FIFO_SIZE);
 }
-
-void EXTI0_1_IRQHandler() { EXTI->RPR1 = 1 << irq_pin; }
 
 void main() {
   const uint32_t SYSCLK_prescaler = 4;
@@ -51,16 +49,9 @@ void main() {
 
   RFM69_init(config->radio.node_id);
 
-  // enable IRQ pin
-  gpio_input(irq_port, irq_pin);
-  gpio_pulldown(irq_port, irq_pin);
-  // source is portB
-  EXTI->EXTICR[irq_pin / 4] = 0x01 << ((irq_pin & 3) << 3);
-  // Rising edge
-  EXTI->RTSR1 |= 1U << irq_pin;
-  // unask irq - yeah, we are unasking according to docs ^^
-  EXTI->IMR1 |= 1U << irq_pin;
-  NVIC_EnableIRQ(EXTI0_1_IRQn);
+  // configure window pin as an input
+  gpio_input(window_port, window_pin);
+  gpio_pulldown(window_port, window_pin);
 
   uint32_t last_measurement_ms = ((uint32_t)-1) / 2;
   for(;;) {
@@ -81,7 +72,7 @@ void main() {
         add_measurement(payload, &offset, SENSOR_SOLAR_VOLTAGE, m.solar_V_mV);
         add_measurement(payload, &offset, SENSOR_VBAT, m.vbat_mV);
         add_measurement(payload, &offset, SENSOR_VREF, m.vref_mV);
-        add_measurement(payload, &offset, SENSOR_WINDOW, !gpio_read(irq_port, irq_pin));
+        add_measurement(payload, &offset, SENSOR_WINDOW, !gpio_read(window_port, window_pin));
         RFM69_send_packet(0, true, offset);
       }
     }
