@@ -31,8 +31,7 @@ void adc_read(adc_measurements_t *res) {
   // ADC1->CR &= ~ADC_CR_BITS_PROPERTY_RS;
   ADC1->CR |= ADC_CR_ADSTART;
 
-  while(waiting)
-    ;
+  while(waiting);
   // disable DMA
   DMA1_Channel2->CCR = 0;
 

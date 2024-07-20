@@ -21,8 +21,7 @@ void uart_init(uint32_t clk_in, uint32_t bauds) {
 
 void uart_send(const char *str) {
   while(*str != '\0') {
-    while(!(USART2->ISR & USART_ISR_TXE_TXFNF))
-      ;
+    while(!(USART2->ISR & USART_ISR_TXE_TXFNF));
     USART2->TDR = *str;
     str++;
   }

@@ -24,8 +24,7 @@ void rgb_test() {
       rgb_set(led, (color == 0) * 255, (color == 1) * 255, (color == 2) * 255);
       rgb_update();
 
-      for(uint32_t i = 0; i < 100000; i++)
-        ;  // delay
+      for(uint32_t i = 0; i < 100000; i++);  // delay
     }
   }
 }

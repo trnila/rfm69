@@ -157,8 +157,7 @@ static uint8_t RFM69_transmit_blocking(uint8_t addr, uint8_t val) {
   uint8_t rx[] = {0, 0};
 
   spi_transmit(tx, rx, sizeof(tx));
-  while(spi_finished == false)
-    ;
+  while(spi_finished == false);
   __DMB();
 
   return rx[1];
@@ -386,8 +385,7 @@ void RFM69_init(uint8_t node_id) {
   const uint32_t networkID = 0xABCDEF;
 
   RFM69_set_mode(RFM69_STATE_SLEEP);
-  while(!spi_finished)
-    ;
+  while(!spi_finished);
 
   // 868Mhz
   // Frf / (Fxosc / 2**19)

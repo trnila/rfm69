@@ -52,8 +52,7 @@ void wakeup_by_rtc(int seconds) {
   // disable wake up timer
   RTC->CR &= ~RTC_CR_WUTE;
   // wait till configuration is allowed
-  while(!(RTC->ICSR & RTC_ICSR_WUTWF))
-    ;
+  while(!(RTC->ICSR & RTC_ICSR_WUTWF));
   // use ck_spre (1hz -> 1 second resolution)
   RTC->CR |= 0b100 << RTC_CR_WUCKSEL_Pos;
   RTC->WUTR = seconds;
