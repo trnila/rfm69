@@ -74,7 +74,7 @@ void wakeup_by_pins() {
   PWR->CR3 |= PWR_CR3_EWUP1 | PWR_CR3_EWUP2;
 }
 
-void deep_sleep() {
+[[noreturn]] void deep_sleep() {
   // enter shutdown mode on sleep
   PWR->CR1 |= 0b100 << PWR_CR1_LPMS_Pos;
   // enable deep sleep
@@ -86,7 +86,7 @@ void deep_sleep() {
   }
 }
 
-void main() {
+[[noreturn]] void main() {
   const uint32_t SYSCLK_prescaler = 4;
   const uint32_t SYSCLK = 16000000UL / (1U << SYSCLK_prescaler);
   RCC->CR |= SYSCLK_prescaler << RCC_CR_HSIDIV_Pos;

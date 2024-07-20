@@ -5,9 +5,9 @@ extern unsigned int _edata;   // end of .data in SRAM
 extern unsigned int _sbss;    // start of .bss in SRAM
 extern unsigned int _ebss;    // end of .bss in SRAM
 
-void main();
+[[noreturn]] void main();
 
-void Reset_Handler() {
+[[noreturn]] void Reset_Handler() {
   // copy .data section from flash to sram
   const unsigned int *src = &_sidata;
   unsigned int *dst = &_sdata;
@@ -22,8 +22,6 @@ void Reset_Handler() {
   }
 
   main();
-  for(;;)
-    ;
 }
 
 static void default_irq_handler() {
