@@ -4,7 +4,6 @@
 #include "RFM69.h"
 #include "adc.h"
 #include "gpio.h"
-#include "sensors.h"
 #include "stm32g031xx.h"
 #include "timer.h"
 #include "uart.h"
@@ -22,16 +21,6 @@ const Config *config = (const Config *)0x0800F800;
 extern RFM69_Packet *tx_packet;
 GPIO_TypeDef *window_port = GPIOA;
 const uint32_t window_pin = 0;
-
-void add_measurement(uint8_t *payload, size_t *offset, uint8_t id, uint32_t value) {
-  payload[(*offset)++] = RFM69_CMD_MEASUREMENT;
-  payload[(*offset)++] = id;
-  payload[(*offset)++] = value;
-  payload[(*offset)++] = value >> 8;
-  payload[(*offset)++] = value >> 16;
-  payload[(*offset)++] = value >> 24;
-  assert(*offset < RFM69_FIFO_SIZE);
-}
 
 void wakeup_by_rtc(int seconds) {
   // enable RTC domain
@@ -112,13 +101,11 @@ void wakeup_by_pins() {
 
   uint8_t *payload = RFM69_get_tx_payload();
   size_t offset = 0;
-  add_measurement(payload, &offset, SENSOR_BATTERY_CURRENT, m.bat_I_mV);
-  add_measurement(payload, &offset, SENSOR_BATTERY_VOLTAGE, m.bat_V_mV);
-  add_measurement(payload, &offset, SENSOR_SOLAR_VOLTAGE, m.solar_V_mV);
-  add_measurement(payload, &offset, SENSOR_VBAT, m.vbat_mV);
-  add_measurement(payload, &offset, SENSOR_VREF, m.vref_mV);
-  add_measurement(payload, &offset, SENSOR_WINDOW, !gpio_read(window_port, window_pin));
+  payload[offset++] = 0x11;
+  payload[offset++] = 0x22;
+  payload[offset++] = 0x33;
   RFM69_send_packet(0, true, offset);
+  // bool opened = !gpio_read(window_port, window_pin);
 
   for(;;) {
     if(RFM69_read_packet()) {
