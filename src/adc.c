@@ -35,6 +35,8 @@ void adc_read(adc_measurements_t *res) {
   // disable DMA
   DMA1_Channel2->CCR = 0;
 
+  // uint16_t vref_real = *((uint16_t *)(0x1FFF75AAUL)) * 3000UL / 4095;
+
   res->vref_mV = *((uint16_t *)(0x1FFF75AAUL)) * 3000UL / data[3];
   res->bat_I_mV = res->vref_mV * data[0] / 4095;
   res->bat_V_mV = res->vref_mV * data[1] / 4095;
@@ -47,13 +49,23 @@ void adc_read(adc_measurements_t *res) {
   res->vbat_mV = data[4] * 2;
 
   char buf[128];
-  snprintf(buf, sizeof(buf), "bat_I_mV=%5u bat_V_mv=%5u solar_V_mV=%5u vref=%5u VBAT=%5u\r\n", res->bat_I_mV,
-           res->bat_V_mV, res->solar_V_mV, res->vref_mV, res->vbat_mV);
+  // snprintf(buf, sizeof(buf), "vref=%5u VBAT=%5u cal=%5d\r\n", res->vref_mV, res->vbat_mV, *((uint16_t *)(0x1FFF75AAUL)));
+  // snprintf(buf, sizeof(buf), "%d %ld\n", vref_real, *((uint16_t *)(0x1FFF75AAUL)) * 3000UL / data[3]);
+  uint32_t vref_data = data[3];
+  uint32_t vbat_data = data[4];
+  uint32_t vrefint = *((uint16_t *)(0x1FFF75AAUL));
+  uint16_t vbat = 1000 * 3.0 * ((3.0 * vbat_data * vrefint) / (4095.0 * vref_data));
+  snprintf(buf, sizeof(buf), "int=%d vref=%ld vbat=%ld %d\n", *((uint16_t *)(0x1FFF75AAUL)), data[3], data[4], vbat);
   uart_send(buf);
+
+  res->vbat_mV = vbat;
 }
 
 void adc_init() {
   RCC->APBENR2 |= RCC_APBENR2_ADCEN;
+
+  // VREFBUF->CSR = 0;
+  // while((VREFBUF->CSR & VREFBUF_CSR_VRR_Msk) == 0);
 
   NVIC_EnableIRQ(DMA1_Channel2_3_IRQn);
 
