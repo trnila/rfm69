@@ -83,11 +83,6 @@ void main() {
   for(;;) {
     RFM69_Packet *packet = RFM69_read_packet();
     if(packet) {
-      // size_t offset = 0;
-      // while(offset < (packet->hdr.length - sizeof(packet->hdr) + 1)) {
-      // const uint8_t *data = &packet->payload[offset];
-      // uint32_t value = data[2] | (data[3] << 8) | (data[4] << 16) | data[5] << 24;
-      // handle_measurement(packet->hdr.src, packet->hdr.flags.seq, value);
       char buf[32];
       snprintf(buf, sizeof(buf), "len=%x dst=%x src=%x ", packet->hdr.length, packet->hdr.dst, packet->hdr.src);
       uart_send(buf);
@@ -111,8 +106,6 @@ void main() {
         rgb_set(packet->hdr.src, 255 * state->open, 0, 0);
       }
 
-      // offset += 2 + 4;
-      //}
       RFM69_rxbuf_return();
     }
 
