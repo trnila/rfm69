@@ -104,6 +104,13 @@ void main() {
 
       uart_send("\n");
 
+      if(packet->hdr.src < MAX_ROOMS) {
+        Room *room = &room_last_updated[packet->hdr.src];
+        room->state = state->open ? WINDOW_OPEN : WINDOW_CLOSED;
+        room->last_update = tick_ms;
+        rgb_set(packet->hdr.src, 255 * state->open, 0, 0);
+      }
+
       // offset += 2 + 4;
       //}
       RFM69_rxbuf_return();
