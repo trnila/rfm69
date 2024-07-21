@@ -51,16 +51,17 @@ void wakeup_by_rtc(int seconds) {
 }
 
 /**
- * Wakeup by rising edge on PA0 and falling edge on PA2
+ * Wakeup by gpio level on WKPUP1 (PA0)
  */
-void wakeup_by_pins() {
+void wakeup_by_pins(int level) {
   // clear all wakeup flags
   PWR->SCR |= PWR_SCR_CWUF;
 
-  // falling edge on wakeup2 pin (PA4), rising edge on wakeup1 pin (PA0)
-  PWR->CR4 |= PWR_CR4_WP2;
-  // enable wakeup1 and wakeup2
-  PWR->CR3 |= PWR_CR3_EWUP1 | PWR_CR3_EWUP2;
+  if(!level) {
+    PWR->CR4 |= PWR_CR4_WP1;
+  }
+  // enable WKUP1
+  PWR->CR3 |= PWR_CR3_EWUP1;
 }
 
 [[noreturn]] void deep_sleep() {
@@ -106,9 +107,9 @@ void wakeup_by_pins() {
   // payload[offset++] = 0x22;
   // payload[offset++] = 0x33;
   // RFM69_send_packet(0, true, offset);
-  //  bool opened = !gpio_read(window_port, window_pin);
+  bool window_level = gpio_read(window_port, window_pin);
   struct SensorState *payload = (struct SensorState *)RFM69_get_tx_payload();
-  payload->open = !gpio_read(window_port, window_pin);
+  payload->open = !window_level;
   payload->voltage = m.vbat_mV;
   payload->firmware = 0x42;
   RFM69_send_packet(0, true, sizeof(*payload));
@@ -120,7 +121,7 @@ void wakeup_by_pins() {
     }
   }
 
-  wakeup_by_pins();
+  wakeup_by_pins(!window_level);
   wakeup_by_rtc(15);
   deep_sleep();
 }
