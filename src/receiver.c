@@ -10,6 +10,7 @@
 #include "uart.h"
 
 #define MAX_ROOMS 23
+#define TIMEOUT_MS 20000
 
 typedef struct {
   uint8_t node_count;
@@ -110,7 +111,7 @@ void main() {
     }
 
     for(size_t i = 0; i < config->node_count; i++) {
-      if(tick_ms - room_last_updated[i].last_update > 5000 && room_last_updated[i].state != WINDOW_TIMEDOUT) {
+      if(tick_ms - room_last_updated[i].last_update > TIMEOUT_MS && room_last_updated[i].state != WINDOW_TIMEDOUT) {
         rgb_set(i, 255, 255, 0);
         room_last_updated[i].state = WINDOW_TIMEDOUT;
       }
