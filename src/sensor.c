@@ -96,7 +96,9 @@ void wakeup_by_pins(int level) {
 
   // configure window pin as an input
   gpio_input(window_port, window_pin);
-  gpio_pulldown(window_port, window_pin);
+  // use pull-up for PA0 in shutdown
+  PWR->CR3 |= PWR_CR3_APC;
+  PWR->PUCRA |= 1 << 0;
 
   adc_measurements_t m;
   adc_read(&m);
