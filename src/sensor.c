@@ -4,6 +4,7 @@
 #include "RFM69.h"
 #include "adc.h"
 #include "gpio.h"
+#include "protocol.h"
 #include "stm32g031xx.h"
 #include "timer.h"
 #include "uart.h"
@@ -99,13 +100,18 @@ void wakeup_by_pins() {
   adc_measurements_t m;
   adc_read(&m);
 
-  uint8_t *payload = RFM69_get_tx_payload();
-  size_t offset = 0;
-  payload[offset++] = 0x11;
-  payload[offset++] = 0x22;
-  payload[offset++] = 0x33;
-  RFM69_send_packet(0, true, offset);
-  // bool opened = !gpio_read(window_port, window_pin);
+  // uint8_t *payload = RFM69_get_tx_payload();
+  // size_t offset = 0;
+  // payload[offset++] = 0x11;
+  // payload[offset++] = 0x22;
+  // payload[offset++] = 0x33;
+  // RFM69_send_packet(0, true, offset);
+  //  bool opened = !gpio_read(window_port, window_pin);
+  struct SensorState *payload = (struct SensorState *)RFM69_get_tx_payload();
+  payload->open = !gpio_read(window_port, window_pin);
+  payload->voltage = m.vbat_mV;
+  payload->firmware = 0x42;
+  RFM69_send_packet(0, true, sizeof(*payload));
 
   for(;;) {
     if(RFM69_read_packet()) {

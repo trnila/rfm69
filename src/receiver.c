@@ -3,6 +3,7 @@
 
 #include "RFM69.h"
 #include "gpio.h"
+#include "protocol.h"
 #include "rgb.h"
 #include "stm32g031xx.h"
 #include "timer.h"
@@ -96,6 +97,10 @@ void main() {
         snprintf(buf, sizeof(buf), "%x ", packet->payload[i]);
         uart_send(buf);
       }
+
+      struct SensorState *state = (struct SensorState *)packet->payload;
+      snprintf(buf, sizeof(buf), "open=%d vbat=%d firmware=%x", state->open, state->voltage, state->firmware);
+      uart_send(buf);
 
       uart_send("\n");
 
