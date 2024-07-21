@@ -32,6 +32,7 @@ def openocd(serial, command):
         '-f', 'interface/stlink.cfg',
         '-f', 'target/stm32g0x.cfg',
         '-c', f'hla_serial {serial}',
+        '-c', 'reset_config srst_only srst_nogate connect_assert_srst',
         '-c', 'init; reset halt',
         '-c', command,
         '-c', 'reset run;shutdown',
