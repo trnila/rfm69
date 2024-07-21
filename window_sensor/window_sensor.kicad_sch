@@ -2911,17 +2911,6 @@
 		)
 		(uuid "c5d24d52-38c7-4966-9a7f-0f1c9a05617b")
 	)
-	(label "WINDOW"
-		(at 113.03 43.18 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "d73440f2-02ed-467c-a75f-e6ac021ea271")
-	)
 	(label "RFM_IRQ"
 		(at 85.09 63.5 180)
 		(fields_autoplaced yes)
@@ -2954,6 +2943,17 @@
 			(justify right bottom)
 		)
 		(uuid "e6794f39-18ab-42f6-a3dd-fc06c2bc7be6")
+	)
+	(label "WINDOW"
+		(at 113.03 33.02 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "e93bf21b-c38a-481b-b921-39e6570f3337")
 	)
 	(label "SWDIO"
 		(at 173.99 88.9 0)
