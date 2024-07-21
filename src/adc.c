@@ -7,9 +7,6 @@
 
 #define DMAMUX_REQ_ADC1 0x00000005U
 
-#define R1 100000
-#define R2 47000
-
 volatile int waiting;
 void DMA1_Channel2_3_IRQHandler(void) {
   DMA1->IFCR |= 1 << 5;
@@ -28,29 +25,13 @@ void adc_read(adc_measurements_t *res) {
       DMA_CCR_EN | DMA_CCR_TCIE | DMA_CCR_MINC | (0b01 << DMA_CCR_PSIZE_Pos) | (0b10 << DMA_CCR_MSIZE_Pos);
 
   // start conversion
-  // ADC1->CR &= ~ADC_CR_BITS_PROPERTY_RS;
   ADC1->CR |= ADC_CR_ADSTART;
 
   while(waiting);
   // disable DMA
   DMA1_Channel2->CCR = 0;
 
-  // uint16_t vref_real = *((uint16_t *)(0x1FFF75AAUL)) * 3000UL / 4095;
-
-  res->vref_mV = *((uint16_t *)(0x1FFF75AAUL)) * 3000UL / data[3];
-  res->bat_I_mV = res->vref_mV * data[0] / 4095;
-  res->bat_V_mV = res->vref_mV * data[1] / 4095;
-  res->solar_V_mV = res->vref_mV * data[2] / 4095;
-
-  res->bat_I_mV = res->bat_I_mV / (330000 / 47000.0);  //* (47 + 97 + 4.7f) / 47;
-  res->bat_V_mV = res->bat_V_mV * (R1 + R2) / R2;
-  res->solar_V_mV = res->solar_V_mV * (R1 + R2) / R2;
-
-  res->vbat_mV = data[4] * 2;
-
   char buf[128];
-  // snprintf(buf, sizeof(buf), "vref=%5u VBAT=%5u cal=%5d\r\n", res->vref_mV, res->vbat_mV, *((uint16_t *)(0x1FFF75AAUL)));
-  // snprintf(buf, sizeof(buf), "%d %ld\n", vref_real, *((uint16_t *)(0x1FFF75AAUL)) * 3000UL / data[3]);
   uint32_t vref_data = data[3];
   uint32_t vbat_data = data[4];
   uint32_t vrefint = *((uint16_t *)(0x1FFF75AAUL));
@@ -63,9 +44,6 @@ void adc_read(adc_measurements_t *res) {
 
 void adc_init() {
   RCC->APBENR2 |= RCC_APBENR2_ADCEN;
-
-  // VREFBUF->CSR = 0;
-  // while((VREFBUF->CSR & VREFBUF_CSR_VRR_Msk) == 0);
 
   NVIC_EnableIRQ(DMA1_Channel2_3_IRQn);
 
