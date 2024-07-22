@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from clang.cindex import CursorKind
 import struct
 import json
+import os
+import signal
 import argparse
 import subprocess
 import tempfile
@@ -26,14 +28,20 @@ class Target:
     name: str
     connected: bool = False
 
-def openocd(serial, command):
-    subprocess.check_call([
+def openocd_args(serial):
+    return  [
         'openocd',
         '-f', 'interface/stlink.cfg',
         '-f', 'target/stm32g0x.cfg',
         '-c', f'hla_serial {serial}',
         '-c', 'reset_config srst_only srst_nogate connect_assert_srst',
         '-c', 'init; reset halt',
+    ]
+
+
+def openocd(serial, command):
+    subprocess.check_call([
+        *openocd_args(serial),
         '-c', command,
         '-c', 'reset run;shutdown',
     ])
@@ -212,16 +220,19 @@ class ParamsModule(Module):
         else:
             raise NotImplementedError
 
+def build():
+    try:
+        subprocess.check_call(['make', '-j', str(multiprocessing.cpu_count())])
+    except subprocess.CalledProcessError:
+        print("BUILD failed")
+        exit(1)
+
 class FlashModule(Module):
     def args(self, parser: argparse.ArgumentParser):
         parser.add_argument('target', nargs='*')
 
     def run(self, args):
-        try:
-            subprocess.check_call(['make', '-j', str(multiprocessing.cpu_count())])
-        except subprocess.CalledProcessError:
-            print("BUILD failed")
-            exit(1)
+        build()
 
         targets = all_targets()
         unknown_targets = args.target - targets.keys()
@@ -245,6 +256,30 @@ class FlashModule(Module):
         print()
         for name, result in results.items():
             print(f"{result: >13} {name}")
+
+class GDBModule(Module):
+    def args(self, parser: argparse.ArgumentParser):
+        parser.add_argument('target')
+
+    def run(self, args):
+        build()
+
+        targets = all_targets()
+        target = targets[args.target]
+
+        p_ocd = subprocess.Popen(openocd_args(target.serial), preexec_fn=os.setsid)
+        try:
+            p_gdb = subprocess.Popen([
+                'arm-none-eabi-gdb',
+                '-q',
+                f'build/{target.executable}.elf',
+                '-ex', 'target extended-remote :3333'
+            ], preexec_fn=os.setsid)
+            signal.signal(signal.SIGINT, lambda *_: p_gdb.send_signal(signal.SIGINT))
+            p_gdb.wait()
+        finally:
+            p_gdb.terminate()
+            p_ocd.terminate()
 
 parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers(dest='module', required=True)
