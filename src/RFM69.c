@@ -175,6 +175,12 @@ uint8_t *RFM69_get_tx_payload() {
 }
 
 void RFM69_send_packet(uint8_t dst, bool require_ack, uint8_t payload_len) {
+  // sleep
+  RFM69_write_blocking(RFM69_REG_OPMODE, 0);
+
+  // wait mode ready
+  while(!(RFM69_read_blocking(0x27) & (1 << 7)));
+
   tx_buf.packet.hdr.length = payload_len + sizeof(tx_buf.packet.hdr) - 1;
   tx_buf.packet.hdr.dst = dst;
   tx_buf.packet.hdr.flags.seq++;

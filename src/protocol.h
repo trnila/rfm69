@@ -15,3 +15,8 @@ struct SensorState {
   uint16_t voltage;
   uint8_t firmware;
 } __attribute__((packed));
+
+struct SensorStateAck {
+  uint8_t open;
+  uint8_t fw;
+} __attribute__((packed));

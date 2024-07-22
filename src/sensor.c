@@ -110,6 +110,17 @@ void wakeup_by_pins(int level) {
   payload->firmware = 0x42;
   RFM69_send_packet(0, true, sizeof(*payload));
 
+  RFM69_Packet *packet;
+  while((packet = RFM69_read_packet()) == NULL);
+
+  struct SensorStateAck *ack = (struct SensorStateAck *)&packet->payload;
+  char buf[64];
+  snprintf(buf, sizeof(buf), "ACK len=%x dst=%x src=%x state=%d fw=%x\n", packet->hdr.length, packet->hdr.dst, packet->hdr.src, ack->open, ack->fw);
+  uart_send(buf);
+  for(uint32_t i = 0; i < 1000; i++) {
+    asm("nop");
+  }
+
   wakeup_by_pins(!window_level);
   wakeup_by_rtc(KEEPALIVE_MS / 1000);
   deep_sleep();

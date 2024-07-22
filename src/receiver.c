@@ -106,6 +106,14 @@ void main() {
         room->last_update = tick_ms;
         rgb_set(packet->hdr.src, 255 * state->open, 0, 0);
       }
+
+      for(uint32_t i = 0; i < 10000; i++) {
+        asm("nop");
+      }
+      struct SensorStateAck *payload = (struct SensorStateAck *)RFM69_get_tx_payload();
+      payload->open = state->open;
+      payload->fw = state->firmware + 1;
+      RFM69_send_packet(packet->hdr.src, true, sizeof(*payload));
     }
 
     for(size_t i = 0; i < config->node_count; i++) {
