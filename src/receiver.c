@@ -85,7 +85,7 @@ void main() {
   for(;;) {
     RFM69_Packet *packet = RFM69_read_packet();
     if(packet) {
-      char buf[32];
+      char buf[64];
       snprintf(buf, sizeof(buf), "len=%x dst=%x src=%x ", packet->hdr.length, packet->hdr.dst, packet->hdr.src);
       uart_send(buf);
 
@@ -95,11 +95,10 @@ void main() {
         uart_send(buf);
       }
 
+      extern uint8_t RSSI;
       struct SensorState *state = (struct SensorState *)packet->payload;
-      snprintf(buf, sizeof(buf), "open=%d vbat=%d firmware=%x", state->open, state->voltage, state->firmware);
+      snprintf(buf, sizeof(buf), "open=%d vbat=%d firmware=%x RSSI=%d dbm\n", state->open, state->voltage, state->firmware, -RSSI / 2);
       uart_send(buf);
-
-      uart_send("\n");
 
       if(packet->hdr.src < MAX_ROOMS) {
         Room *room = &room_last_updated[packet->hdr.src];

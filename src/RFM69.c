@@ -82,6 +82,8 @@ static uint8_t rx_spi_buf[2];
 
 static RFM69_Packet *tx_packet = &tx_buf.packet;
 
+uint8_t RSSI;
+
 void process_state_machine();
 
 void spi_init() {
@@ -332,11 +334,20 @@ void RFM69_rxbuf_return() {
 }
 
 RFM69_Packet *RFM69_read_packet() {
-  if(!rx_buf_full) {
+  if(gpio_read(GPIOB, irq_pin) == 0) {
     return NULL;
   }
 
-  __DMB();
+  RSSI = RFM69_read_blocking(0x24);
+
+  uint8_t *p = (uint8_t *)&rx_buf.packet;
+
+  int len = RFM69_read_blocking(RFM69_REG_FIFO);
+  p[0] = len;
+  for(int i = 0; i < len; i++) {
+    p[i + 1] = RFM69_read_blocking(RFM69_REG_FIFO);
+  }
+
   return &rx_buf.packet;
 }
 
@@ -355,9 +366,14 @@ void RFM69_send_packet(uint8_t dst, bool require_ack, uint8_t payload_len) {
   tx_buf.packet.hdr.dst = dst;
   tx_buf.packet.hdr.flags.seq++;
   tx_buf.packet.hdr.flags.req_ack = require_ack;
-  tx_ack_retries = 0;
-  tx_buf_full = true;
-  process_state_machine();
+
+  tx_buf.reg = RFM69_REG_FIFO | RFM69_WRITE_MASK;
+  const uint8_t *p = (const uint8_t *)&tx_buf.packet;
+  for(int i = 0; i < tx_buf.packet.hdr.length + 1 /* len */ + 1 /* register */; i++) {
+    RFM69_write_blocking(RFM69_REG_FIFO, p[i]);
+  }
+
+  RFM69_write_blocking(RFM69_REG_OPMODE, RFM69_STATE_TX << 2);
 }
 
 void RFM69_init(uint8_t node_id) {
@@ -420,6 +436,8 @@ void RFM69_init(uint8_t node_id) {
 
   // enable IRQ pin
   gpio_input(GPIOB, irq_pin);
+
+  /*
   // source is portB
   EXTI->EXTICR[irq_pin / 4] = 0x01 << ((irq_pin & 3) << 3);
   // Rising edge
@@ -429,4 +447,5 @@ void RFM69_init(uint8_t node_id) {
   NVIC_EnableIRQ(EXTI4_15_IRQn);
 
   process_state_machine();
+  */
 }
