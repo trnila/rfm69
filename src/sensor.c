@@ -20,7 +20,6 @@ typedef struct {
 } Config;
 
 const Config *config = (const Config *)0x0800F800;
-extern RFM69_Packet *tx_packet;
 GPIO_TypeDef *window_port = GPIOA;
 const uint32_t window_pin = 0;
 

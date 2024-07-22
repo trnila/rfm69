@@ -106,8 +106,6 @@ void main() {
         room->last_update = tick_ms;
         rgb_set(packet->hdr.src, 255 * state->open, 0, 0);
       }
-
-      RFM69_rxbuf_return();
     }
 
     for(size_t i = 0; i < config->node_count; i++) {
