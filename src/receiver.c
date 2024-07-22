@@ -95,7 +95,7 @@ void main() {
 
       extern uint8_t RSSI;
       struct SensorState *state = (struct SensorState *)packet->payload;
-      snprintf(buf, sizeof(buf), "open=%d vbat=%d firmware=%x RSSI=%d dbm SRSSI=%d dbm\n", state->open, state->voltage, state->firmware, -RSSI / 2, -state->RSSI / 2);
+      snprintf(buf, sizeof(buf), "open=%d vbat=%d firmware=%x RSSI=%d dbm SRSSI=%d dbm cnt=%d\n", state->open, state->voltage, state->firmware, -RSSI / 2, -state->RSSI / 2, state->counter);
       uart_send(buf);
 
       if(packet->hdr.src < MAX_ROOMS) {
