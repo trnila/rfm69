@@ -3,6 +3,7 @@
 
 #include "RFM69.h"
 #include "adc.h"
+#include "config.h"
 #include "gpio.h"
 #include "protocol.h"
 #include "stm32g031xx.h"
@@ -124,6 +125,6 @@ void wakeup_by_pins(int level) {
   }
 
   wakeup_by_pins(!window_level);
-  wakeup_by_rtc(15);
+  wakeup_by_rtc(KEEPALIVE_MS / 1000);
   deep_sleep();
 }
