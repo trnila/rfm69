@@ -82,6 +82,7 @@ void main() {
   }
   uart_send("boot\n");
 
+  uint8_t ack = 0;
   for(;;) {
     RFM69_Packet *packet = RFM69_read_packet();
     if(packet) {
@@ -89,13 +90,13 @@ void main() {
       uart_send(buf);
 
       for(int i = 0; i < packet->hdr.length - sizeof(packet->hdr) + 1; i++) {
-        snprintf(buf, sizeof(buf), "%x ", packet->payload[i]);
+        snprintf(buf, sizeof(buf), "%02x ", packet->payload[i]);
         uart_send(buf);
       }
 
       extern uint8_t RSSI;
       struct SensorState *state = (struct SensorState *)packet->payload;
-      snprintf(buf, sizeof(buf), "open=%d vbat=%d firmware=%x RSSI=%d dbm SRSSI=%d dbm cnt=%d\n", state->open, state->voltage, state->firmware, -RSSI / 2, -state->RSSI / 2, state->counter);
+      snprintf(buf, sizeof(buf), "open=%d vbat=%d firmware=%x RSSI=% 4d dbm SRSSI=% 4d dbm cnt=% 3d ack=% 3d\n", state->open, state->voltage, state->firmware, -RSSI / 2, -state->RSSI / 2, state->counter, state->cnt_ack);
       uart_send(buf);
 
       if(packet->hdr.src < MAX_ROOMS) {
@@ -111,6 +112,7 @@ void main() {
       struct SensorStateAck *payload = (struct SensorStateAck *)RFM69_get_tx_payload();
       payload->open = state->open;
       payload->fw = state->firmware + 1;
+      payload->ack = ack++;
       RFM69_send_packet(packet->hdr.src, true, sizeof(*payload));
     }
 

@@ -101,6 +101,7 @@ void wakeup_by_pins(int level) {
   PWR->PUCRA |= 1 << 0;
 
   uint8_t cnt = 0;
+  uint8_t cnt_ack = 0;
   for(;;) {
     adc_measurements_t m;
     adc_read(&m);
@@ -113,6 +114,7 @@ void wakeup_by_pins(int level) {
     extern uint8_t RSSI;
     payload->RSSI = RSSI;
     payload->counter = cnt++;
+    payload->cnt_ack = cnt_ack;
     RFM69_send_packet(0, true, sizeof(*payload));
 
     RFM69_Packet *packet;
@@ -127,6 +129,7 @@ void wakeup_by_pins(int level) {
       for(uint32_t i = 0; i < 1000; i++) {
         asm("nop");
       }
+      cnt_ack = ack->ack;
     }
 
     for(uint32_t i = 0; i < 100000; i++) {

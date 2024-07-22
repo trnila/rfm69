@@ -16,9 +16,11 @@ struct SensorState {
   uint8_t firmware;
   uint8_t RSSI;
   uint8_t counter;
+  uint8_t cnt_ack;
 } __attribute__((packed));
 
 struct SensorStateAck {
   uint8_t open;
   uint8_t fw;
+  uint8_t ack;
 } __attribute__((packed));
