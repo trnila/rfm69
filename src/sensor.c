@@ -100,28 +100,40 @@ void wakeup_by_pins(int level) {
   PWR->CR3 |= PWR_CR3_APC;
   PWR->PUCRA |= 1 << 0;
 
-  adc_measurements_t m;
-  adc_read(&m);
+  for(;;) {
+    adc_measurements_t m;
+    adc_read(&m);
 
-  bool window_level = gpio_read(window_port, window_pin);
-  struct SensorState *payload = (struct SensorState *)RFM69_get_tx_payload();
-  payload->open = !window_level;
-  payload->voltage = m.vbat_mV;
-  payload->firmware = 0x42;
-  RFM69_send_packet(0, true, sizeof(*payload));
+    bool window_level = gpio_read(window_port, window_pin);
+    struct SensorState *payload = (struct SensorState *)RFM69_get_tx_payload();
+    payload->open = !window_level;
+    payload->voltage = m.vbat_mV;
+    payload->firmware = 0x42;
+    extern uint8_t RSSI;
+    payload->RSSI = RSSI;
+    RFM69_send_packet(0, true, sizeof(*payload));
 
-  RFM69_Packet *packet;
-  while((packet = RFM69_read_packet()) == NULL);
+    RFM69_Packet *packet;
+    uint32_t timeout_ms = tick_ms + 5000;
+    while((packet = RFM69_read_packet()) == NULL && tick_ms < timeout_ms);
 
-  struct SensorStateAck *ack = (struct SensorStateAck *)&packet->payload;
-  char buf[64];
-  snprintf(buf, sizeof(buf), "ACK len=%x dst=%x src=%x state=%d fw=%x\n", packet->hdr.length, packet->hdr.dst, packet->hdr.src, ack->open, ack->fw);
-  uart_send(buf);
-  for(uint32_t i = 0; i < 1000; i++) {
-    asm("nop");
+    if(packet) {
+      struct SensorStateAck *ack = (struct SensorStateAck *)&packet->payload;
+      char buf[64];
+      snprintf(buf, sizeof(buf), "ACK len=%x dst=%x src=%x state=%d fw=%x\n", packet->hdr.length, packet->hdr.dst, packet->hdr.src, ack->open, ack->fw);
+      uart_send(buf);
+      for(uint32_t i = 0; i < 1000; i++) {
+        asm("nop");
+      }
+    }
+
+    for(uint32_t i = 0; i < 100000; i++) {
+      asm("nop");
+    }
+    uart_send("cycle\n");
   }
 
-  wakeup_by_pins(!window_level);
-  wakeup_by_rtc(KEEPALIVE_MS / 1000);
-  deep_sleep();
+  // wakeup_by_pins(!window_level);
+  // wakeup_by_rtc(KEEPALIVE_MS / 1000);
+  // deep_sleep();
 }

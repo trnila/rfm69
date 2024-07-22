@@ -61,7 +61,7 @@ static void handle_measurement(uint8_t src, uint8_t seq, uint32_t value) {
   uart_send(buf);
 }
 */
-
+char buf[128];
 void main() {
   const uint32_t SYSCLK = 16000000UL;
   RCC->IOPENR |= RCC_IOPENR_GPIOAEN;
@@ -85,19 +85,17 @@ void main() {
   for(;;) {
     RFM69_Packet *packet = RFM69_read_packet();
     if(packet) {
-      char buf[64];
       snprintf(buf, sizeof(buf), "len=%x dst=%x src=%x ", packet->hdr.length, packet->hdr.dst, packet->hdr.src);
       uart_send(buf);
 
       for(int i = 0; i < packet->hdr.length - sizeof(packet->hdr) + 1; i++) {
-        char buf[32];
         snprintf(buf, sizeof(buf), "%x ", packet->payload[i]);
         uart_send(buf);
       }
 
       extern uint8_t RSSI;
       struct SensorState *state = (struct SensorState *)packet->payload;
-      snprintf(buf, sizeof(buf), "open=%d vbat=%d firmware=%x RSSI=%d dbm\n", state->open, state->voltage, state->firmware, -RSSI / 2);
+      snprintf(buf, sizeof(buf), "open=%d vbat=%d firmware=%x RSSI=%d dbm SRSSI=%d dbm\n", state->open, state->voltage, state->firmware, -RSSI / 2, -state->RSSI / 2);
       uart_send(buf);
 
       if(packet->hdr.src < MAX_ROOMS) {
@@ -107,7 +105,7 @@ void main() {
         rgb_set(packet->hdr.src, 255 * state->open, 0, 0);
       }
 
-      for(uint32_t i = 0; i < 10000; i++) {
+      for(uint32_t i = 0; i < 100000; i++) {
         asm("nop");
       }
       struct SensorStateAck *payload = (struct SensorStateAck *)RFM69_get_tx_payload();
