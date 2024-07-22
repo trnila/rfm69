@@ -151,6 +151,8 @@ void rx_led_off(timer *t) { gpio_output(RX_LED_PORT, RX_LED_PIN, 0); }
 void tx_led_off(timer *t) { gpio_output(TX_LED_PORT, TX_LED_PIN, 0); }
 
 RFM69_Packet *RFM69_read_packet() {
+  RFM69_write_blocking(RFM69_REG_OPMODE, 0b100 << 2);
+
   if(gpio_read(GPIOB, irq_pin) == 0) {
     return NULL;
   }
@@ -185,6 +187,12 @@ void RFM69_send_packet(uint8_t dst, bool require_ack, uint8_t payload_len) {
 
   // transmit
   RFM69_write_blocking(RFM69_REG_OPMODE, 0b011 << 2);
+
+  // wait mode ready
+  while(!(RFM69_read_blocking(0x27) & (1 << 7)));
+
+  // waint until PacketSent
+  while(!(RFM69_read_blocking(0x28) & (1 << 3)));
 }
 
 void RFM69_init(uint8_t node_id) {
@@ -242,6 +250,9 @@ void RFM69_init(uint8_t node_id) {
   // Rx - PayloadReady
   // Tx - TxReady
   RFM69_write_blocking(RFM69_REG_DIOMAPPING1, 0b01 << 6);
+
+  // sleep
+  RFM69_write_blocking(RFM69_REG_OPMODE, 0);
 
   // enable IRQ pin as an input
   gpio_input(GPIOB, irq_pin);
