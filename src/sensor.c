@@ -118,7 +118,7 @@ void wakeup_by_pins(int level) {
     RFM69_send_packet(0, true, sizeof(*payload));
 
     RFM69_Packet *packet;
-    uint32_t timeout_ms = tick_ms + 5000;
+    uint32_t timeout_ms = tick_ms + 3000;
     while((packet = RFM69_read_packet()) == NULL && tick_ms < timeout_ms);
 
     if(packet) {
