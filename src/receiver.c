@@ -85,7 +85,7 @@ void main() {
   uint8_t ack = 0;
   for(;;) {
     RFM69_Packet *packet = RFM69_read_packet();
-    if(packet) {
+    if(packet && packet->hdr.length > 0) {
       snprintf(buf, sizeof(buf), "len=%x dst=%x src=%x ", packet->hdr.length, packet->hdr.dst, packet->hdr.src);
       uart_send(buf);
 
