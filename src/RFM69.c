@@ -216,56 +216,57 @@ void RFM69_init(uint8_t node_id) {
   spi_init();
   tx_led_timer = timer_create();
   rx_led_timer = timer_create();
+
   /*
+    const uint32_t bitrate = 4800;
+    const uint32_t F_dev = 50000;
 
-  const uint32_t bitrate = 4800;
-  const uint32_t F_dev = 50000;
+    const uint32_t F_osc = 32000000;
+    const uint32_t F_step = F_osc / 524288;  // 524288 = 2**19
+    const uint32_t networkID = 0xABCDEF;
 
-  const uint32_t F_osc = 32000000;
-  const uint32_t F_step = F_osc / 524288;  // 524288 = 2**19
-  const uint32_t networkID = 0xABCDEF;
+    while(!spi_finished);
 
-  while(!spi_finished);
+    // 868Mhz
+    // Frf / (Fxosc / 2**19)
+    // 868000000 / (32000000 / 2**19)
+    RFM69_write_blocking(RFM69_REG_FRFMSB, 0xD9);
+    RFM69_write_blocking(RFM69_REG_FRFMID, 0x00);
+    RFM69_write_blocking(RFM69_REG_FRFLSB, 0x00);
 
-  // 868Mhz
-  // Frf / (Fxosc / 2**19)
-  // 868000000 / (32000000 / 2**19)
-  RFM69_write_blocking(RFM69_REG_FRFMSB, 0xD9);
-  RFM69_write_blocking(RFM69_REG_FRFMID, 0x00);
-  RFM69_write_blocking(RFM69_REG_FRFLSB, 0x00);
+    RFM69_write16(RFM69_REG_BITRATEMSB, F_osc / bitrate);
+    RFM69_write16(RFM69_REG_FDEVMSB, F_dev / F_step);
+    RFM69_write_blocking(RFM69_REG_RXBW, 0x42);
 
-  RFM69_write16(RFM69_REG_BITRATEMSB, F_osc / bitrate);
-  RFM69_write16(RFM69_REG_FDEVMSB, F_dev / F_step);
-  RFM69_write_blocking(RFM69_REG_RXBW, 0x42);
+    RFM69_write_blocking(RFM69_REG_DIOMAPPING2, 0x07);
 
-  RFM69_write_blocking(RFM69_REG_DIOMAPPING2, 0x07);
+    // two sync bytes
+    RFM69_write_blocking(RFM69_REG_SYNCCONFIG, 0x88);
+    RFM69_write16(RFM69_REG_SYNCVALUE1, networkID & 0xFFFFU);
 
-  // two sync bytes
-  RFM69_write_blocking(RFM69_REG_SYNCCONFIG, 0x88);
-  RFM69_write16(RFM69_REG_SYNCVALUE1, networkID & 0xFFFFU);
+    // variable packet, and filter our address
+    RFM69_write_blocking(RFM69_REG_PACKETCONFIG1, 0b10010010);
+    RFM69_write_blocking(RFM69_REG_PAYLOADLENGTH, 1);
+    RFM69_write_blocking(RFM69_REG_PAYLOADLENGTH, 66);
+    RFM69_write_blocking(RFM69_REG_NODEADRS, node_id);
 
-  // variable packet, and filter our address
-  RFM69_write_blocking(RFM69_REG_PACKETCONFIG1, 0b10010010);
-  RFM69_write_blocking(RFM69_REG_PAYLOADLENGTH, 1);
-  RFM69_write_blocking(RFM69_REG_PAYLOADLENGTH, 66);
-  RFM69_write_blocking(RFM69_REG_NODEADRS, node_id);
+    // start sending once fifo has at least one byte
+    RFM69_write_blocking(RFM69_REG_FIFOTHRESH, 0x80);
 
-  // start sending once fifo has at least one byte
-  RFM69_write_blocking(RFM69_REG_FIFOTHRESH, 0x80);
+    // enable IRQ
+    // Rx - PayloadReady
+    // Tx - TxReady
+    RFM69_write_blocking(RFM69_REG_DIOMAPPING1, 0b01 << 6);
 
-  // enable IRQ
-  // Rx - PayloadReady
-  // Tx - TxReady
-  RFM69_write_blocking(RFM69_REG_DIOMAPPING1, 0b01 << 6);
+    // sleep
+    RFM69_write_blocking(RFM69_REG_OPMODE, 0);
 
-  // sleep
-  RFM69_write_blocking(RFM69_REG_OPMODE, 0);
-
-    RFM69_write_blocking(0x13, 0x0F);
-    RFM69_write_blocking(0x5A, 0x5D);
-    RFM69_write_blocking(0x5C, 0x7C);
-    RFM69_write_blocking(0x11, 0x60|(23+8));
-*/
+      RFM69_write_blocking(0x13, 0x0F);
+      RFM69_write_blocking(0x5A, 0x5D);
+      RFM69_write_blocking(0x5C, 0x7C);
+      RFM69_write_blocking(0x11, 0x60|(23+8));
+      RFM69_write_blocking(0x6f, 0x30);
+  */
 
   RFM69_write_blocking(0x01, 0x04);
   RFM69_write_blocking(0x02, 0);
