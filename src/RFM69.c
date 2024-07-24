@@ -216,6 +216,7 @@ void RFM69_init(uint8_t node_id) {
   spi_init();
   tx_led_timer = timer_create();
   rx_led_timer = timer_create();
+  /*
 
   const uint32_t bitrate = 4800;
   const uint32_t F_dev = 50000;
@@ -259,6 +260,46 @@ void RFM69_init(uint8_t node_id) {
 
   // sleep
   RFM69_write_blocking(RFM69_REG_OPMODE, 0);
+
+    RFM69_write_blocking(0x13, 0x0F);
+    RFM69_write_blocking(0x5A, 0x5D);
+    RFM69_write_blocking(0x5C, 0x7C);
+    RFM69_write_blocking(0x11, 0x60|(23+8));
+*/
+
+  RFM69_write_blocking(0x01, 0x04);
+  RFM69_write_blocking(0x02, 0);
+  RFM69_write_blocking(0x03, 0x02);
+  RFM69_write_blocking(0x04, 0x40);
+  RFM69_write_blocking(0x05, 0x03);
+  RFM69_write_blocking(0x06, 0x33);
+
+  RFM69_write_blocking(0x07, 0xD9);
+  RFM69_write_blocking(0x08, 0x00);
+  RFM69_write_blocking(0x09, 0x00);
+
+  RFM69_write_blocking(0x19, 0x42);
+  RFM69_write_blocking(0x25, 0x40);
+  RFM69_write_blocking(0x26, 0x07);
+  RFM69_write_blocking(0x28, 0x10);
+  RFM69_write_blocking(0x29, 220);
+
+  RFM69_write_blocking(0x2E, 0x88);
+  RFM69_write_blocking(0x2F, 0x2D);
+  RFM69_write_blocking(0x30, 10);
+
+  RFM69_write_blocking(0x37, 0x90);
+  RFM69_write_blocking(0x38, 66);
+
+  RFM69_write_blocking(0x3c, 0x8F);
+  RFM69_write_blocking(0x3d, 0x10);
+
+  RFM69_write_blocking(0x6F, 0x30);
+
+  RFM69_write_blocking(0x13, 0x0F);
+  RFM69_write_blocking(0x5A, 0x5D);
+  RFM69_write_blocking(0x5C, 0x7C);
+  RFM69_write_blocking(0x11, 0x60 | (23 + 8));
 
   // enable IRQ pin as an input
   gpio_input(GPIOB, irq_pin);
