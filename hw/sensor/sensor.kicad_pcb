@@ -135,7 +135,7 @@
 		(descr "Capacitor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal with elongated pad for handsoldering. (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf, https://docs.google.com/spreadsheets/d/1BsfQQcO9C6DZCsRaXUlFlo91Tg2WpOkGARC1WS5S8t0/edit?usp=sharing), generated with kicad-footprint-generator")
 		(tags "capacitor handsolder")
 		(property "Reference" "C3"
-			(at 2.735 0.15 360)
+			(at 2.735 0.15 0)
 			(layer "F.SilkS")
 			(uuid "308d6aaa-3c07-4ccb-b717-284a076b7fc1")
 			(effects
@@ -146,7 +146,7 @@
 			)
 		)
 		(property "Value" "5.6pF"
-			(at 0 1.68 360)
+			(at 0 1.68 0)
 			(layer "F.Fab")
 			(uuid "e8e90c23-56b3-4982-86fe-13d2091174b0")
 			(effects
@@ -198,7 +198,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/e64726b0-9d5e-40d4-be1e-4aff6cca6fa8")
 		(sheetname "Root")
-		(sheetfile "window_sensor.kicad_sch")
+		(sheetfile "sensor.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start -0.261252 0.735)
@@ -301,7 +301,7 @@
 			(uuid "0fcd9dfe-2eab-46db-bbc7-ef1253f0320d")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(uuid "b733fe0f-0c3e-4107-9dcb-cc3e224c47e4")
 			(effects
@@ -411,7 +411,7 @@
 		(property ki_fp_filters "SolderJumper*Open*")
 		(path "/7a0c171f-66e8-47ed-bf50-dc74af7b9694")
 		(sheetname "Root")
-		(sheetfile "window_sensor.kicad_sch")
+		(sheetfile "sensor.kicad_sch")
 		(zone_connect 1)
 		(attr exclude_from_pos_files exclude_from_bom)
 		(fp_line
@@ -613,7 +613,7 @@
 		(property ki_fp_filters "SolderJumper*Open*")
 		(path "/8413a540-68c6-4dd3-9c91-1e23d5bf47e1")
 		(sheetname "Root")
-		(sheetfile "window_sensor.kicad_sch")
+		(sheetfile "sensor.kicad_sch")
 		(zone_connect 1)
 		(attr exclude_from_pos_files exclude_from_bom)
 		(fp_line
@@ -825,7 +825,7 @@
 		(property ki_fp_filters "TerminalBlock*:*")
 		(path "/9ee69b8e-a8ee-49cb-9bca-aaaeb631fa22")
 		(sheetname "Root")
-		(sheetfile "window_sensor.kicad_sch")
+		(sheetfile "sensor.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start -1.88 2.72)
@@ -1214,7 +1214,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/cdd9039c-5ece-4a05-9093-b3f923d5dc05")
 		(sheetname "Root")
-		(sheetfile "window_sensor.kicad_sch")
+		(sheetfile "sensor.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start -0.261252 0.735)
@@ -1364,7 +1364,7 @@
 		(descr "Capacitor SMD 0805 (2012 Metric), square (rectangular) end terminal, IPC_7351 nominal with elongated pad for handsoldering. (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf, https://docs.google.com/spreadsheets/d/1BsfQQcO9C6DZCsRaXUlFlo91Tg2WpOkGARC1WS5S8t0/edit?usp=sharing), generated with kicad-footprint-generator")
 		(tags "capacitor handsolder")
 		(property "Reference" "C6"
-			(at 0 1.5 360)
+			(at 0 1.5 0)
 			(layer "F.SilkS")
 			(uuid "bbd78f24-eb92-4eee-85d6-f2b5fdff3559")
 			(effects
@@ -1375,7 +1375,7 @@
 			)
 		)
 		(property "Value" "100nF"
-			(at 0 1.68 360)
+			(at 0 1.68 0)
 			(layer "F.Fab")
 			(uuid "abb1c43b-f79d-46b5-96bf-b6e8b7c3a0cc")
 			(effects
@@ -1427,7 +1427,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/8364e0fb-a008-41f9-b137-26d7865b8c33")
 		(sheetname "Root")
-		(sheetfile "window_sensor.kicad_sch")
+		(sheetfile "sensor.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start -0.261252 0.735)
@@ -1530,7 +1530,7 @@
 			(uuid "cc776894-28d0-4a2e-ad4b-38a7e589d899")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(uuid "71e168a2-6349-4c33-a976-bbe727a8cc4a")
 			(effects
@@ -1640,7 +1640,7 @@
 		(property ki_fp_filters "SolderJumper*Open*")
 		(path "/91222424-6db2-4154-900d-14345a6c2912")
 		(sheetname "Root")
-		(sheetfile "window_sensor.kicad_sch")
+		(sheetfile "sensor.kicad_sch")
 		(zone_connect 1)
 		(attr exclude_from_pos_files exclude_from_bom)
 		(fp_line
@@ -1855,7 +1855,7 @@
 		(property ki_fp_filters "PinHeader?2x07?P1.27mm*")
 		(path "/1c7f1a26-bbdf-4762-8375-ea86eceed614")
 		(sheetname "Root")
-		(sheetfile "window_sensor.kicad_sch")
+		(sheetfile "sensor.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 1.71 8.315)
@@ -2808,7 +2808,7 @@
 			(uuid "04cc1838-27f3-45e3-b264-cc758e290b5a")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 2.27 3.81 360)
+			(at 2.27 3.81 0)
 			(layer "F.Fab")
 			(uuid "7df200bd-8f27-4d2c-a18e-2a19f700c3a4")
 			(effects
@@ -2991,7 +2991,7 @@
 		(descr "868Mhz copper string antenna, right angle, approx. 15mm coil length, 5.5mm OD, 0.8 wire diameter, https://www.nicerf.com/item/868mhz-spring-antenna-sw868-th13")
 		(tags "antenna rf")
 		(property "Reference" "AE1"
-			(at 0 2 360)
+			(at 0 2 0)
 			(layer "F.SilkS")
 			(uuid "2fef0a36-36e9-4a21-a085-227e1597d45a")
 			(effects
@@ -3054,7 +3054,7 @@
 		)
 		(path "/16e71b44-31de-44a9-b880-4ad77de79559")
 		(sheetname "Root")
-		(sheetfile "window_sensor.kicad_sch")
+		(sheetfile "sensor.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start -1.01 -1.01)
@@ -3229,7 +3229,7 @@
 			(uuid "8123f662-49f4-48b5-8458-8e471c4cd902")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 12.75 0 360)
+			(at 12.75 0 0)
 			(layer "F.Fab")
 			(uuid "4085574c-1655-4270-9824-cdd78ddf0868")
 			(effects
@@ -3334,7 +3334,7 @@
 		(property ki_fp_filters "LQFP*7x7mm*P0.8mm*")
 		(path "/698b3e93-0c0c-4cb9-bfc0-2a11c86d1f85")
 		(sheetname "Root")
-		(sheetfile "window_sensor.kicad_sch")
+		(sheetfile "sensor.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start -3.61 -3.61)
@@ -4131,7 +4131,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/6db00840-0d22-4d64-8169-2e2e7878ff32")
 		(sheetname "Root")
-		(sheetfile "window_sensor.kicad_sch")
+		(sheetfile "sensor.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start -0.261252 0.735)
@@ -4281,7 +4281,7 @@
 		(descr "Radio, RF, Module, http://www.hoperf.com/upload/rf/RFM69HW-V1.3.pdf")
 		(tags "Radio RF Module")
 		(property "Reference" "U2"
-			(at 9.5 9 360)
+			(at 9.5 9 0)
 			(layer "F.SilkS")
 			(uuid "755820ed-a909-4a9b-87de-28dba8bf71ab")
 			(effects
@@ -4292,7 +4292,7 @@
 			)
 		)
 		(property "Value" "RFM69HW"
-			(at 0 2.5 360)
+			(at 0 2.5 0)
 			(layer "F.Fab")
 			(uuid "4f3021ac-10b7-4b1b-b40c-71240a39184c")
 			(effects
@@ -4344,7 +4344,7 @@
 		(property ki_fp_filters "HOPERF*RFM69HW*")
 		(path "/115d0bbb-a591-4f67-8b1e-8fe7aee55f5e")
 		(sheetname "Root")
-		(sheetfile "window_sensor.kicad_sch")
+		(sheetfile "sensor.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start 10.05 7.8)
@@ -4500,7 +4500,7 @@
 			(uuid "5dcc18a7-5a28-47b7-848e-a459dc4218d7")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(uuid "46c48f71-b2a7-4d22-94e9-f09e314eeb8f")
 			(effects
@@ -4749,7 +4749,7 @@
 		(property ki_fp_filters "Crystal*")
 		(path "/4a0d83e8-3e29-4e32-bfdf-0ec5fab888cf")
 		(sheetname "Root")
-		(sheetfile "window_sensor.kicad_sch")
+		(sheetfile "sensor.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start -0.675 -0.875)
@@ -4962,7 +4962,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/bd81d8a3-aed2-4f22-92f8-aa4b67529f2c")
 		(sheetname "Root")
-		(sheetfile "window_sensor.kicad_sch")
+		(sheetfile "sensor.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start -0.261252 0.735)
@@ -5175,7 +5175,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/603afdd6-76b9-42d5-a512-b7092f01e48e")
 		(sheetname "Root")
-		(sheetfile "window_sensor.kicad_sch")
+		(sheetfile "sensor.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start -0.261252 0.735)
@@ -5388,7 +5388,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/7faec562-d7c2-4a45-a88a-666a8d686da8")
 		(sheetname "Root")
-		(sheetfile "window_sensor.kicad_sch")
+		(sheetfile "sensor.kicad_sch")
 		(attr smd dnp)
 		(fp_line
 			(start -0.227064 -0.735)
@@ -5605,7 +5605,7 @@
 		)
 		(path "/9b42c5b6-c4f3-4e31-bb68-f7a50fb6c833")
 		(sheetname "Root")
-		(sheetfile "window_sensor.kicad_sch")
+		(sheetfile "sensor.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 57.02 -24.055)
