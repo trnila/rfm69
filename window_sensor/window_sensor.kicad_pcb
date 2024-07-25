@@ -809,6 +809,19 @@
 				)
 			)
 		)
+		(property "manf#" "CTBP2054/2"
+			(at 0 0 0)
+			(unlocked yes)
+			(layer "F.Fab")
+			(hide yes)
+			(uuid "09994a4d-1957-4671-b578-8dc903b7c163")
+			(effects
+				(font
+					(size 1 1)
+					(thickness 0.15)
+				)
+			)
+		)
 		(property ki_fp_filters "TerminalBlock*:*")
 		(path "/9ee69b8e-a8ee-49cb-9bca-aaaeb631fa22")
 		(sheetname "Root")
