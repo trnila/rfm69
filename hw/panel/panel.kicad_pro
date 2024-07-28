@@ -490,7 +490,7 @@
     "page_layout_descr_file": ""
   },
   "schematic": {
-    "annotate_start_num": 111,
+    "annotate_start_num": 211,
     "bom_export_filename": "",
     "bom_fmt_presets": [],
     "bom_fmt_settings": {
@@ -595,15 +595,15 @@
     ],
     [
       "25ce2041-dbac-48cd-bbe5-20edc068d251",
-      "leds"
-    ],
-    [
-      "891f5055-7819-4ba1-918e-cbf56e33b3d9",
-      "leds1"
+      "led_top_left"
     ],
     [
       "f2a6ef86-3610-4341-b64c-bb7fd8ed5534",
-      "leds2"
+      "led_top_right"
+    ],
+    [
+      "891f5055-7819-4ba1-918e-cbf56e33b3d9",
+      "led_bot_left"
     ]
   ],
   "text_variables": {}

@@ -8567,7 +8567,7 @@
 			(color 0 0 0 0.0000)
 		)
 		(uuid "25ce2041-dbac-48cd-bbe5-20edc068d251")
-		(property "Sheetname" "leds"
+		(property "Sheetname" "led_top_left"
 			(at 173.99 60.2484 0)
 			(effects
 				(font
@@ -8625,7 +8625,7 @@
 			(color 0 0 0 0.0000)
 		)
 		(uuid "891f5055-7819-4ba1-918e-cbf56e33b3d9")
-		(property "Sheetname" "leds1"
+		(property "Sheetname" "led_bot_left"
 			(at 173.99 74.2184 0)
 			(effects
 				(font
@@ -8666,7 +8666,7 @@
 		(instances
 			(project "panel"
 				(path "/75e15db9-5774-4cb3-bd4e-28bd152fa038"
-					(page "3")
+					(page "5")
 				)
 			)
 		)
@@ -8683,7 +8683,7 @@
 			(color 0 0 0 0.0000)
 		)
 		(uuid "f2a6ef86-3610-4341-b64c-bb7fd8ed5534")
-		(property "Sheetname" "leds2"
+		(property "Sheetname" "led_top_right"
 			(at 194.31 60.2484 0)
 			(effects
 				(font
@@ -8724,7 +8724,7 @@
 		(instances
 			(project "panel"
 				(path "/75e15db9-5774-4cb3-bd4e-28bd152fa038"
-					(page "4")
+					(page "3")
 				)
 			)
 		)
