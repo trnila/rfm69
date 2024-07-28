@@ -490,7 +490,7 @@
     "page_layout_descr_file": ""
   },
   "schematic": {
-    "annotate_start_num": 0,
+    "annotate_start_num": 111,
     "bom_export_filename": "",
     "bom_fmt_presets": [],
     "bom_fmt_settings": {
@@ -600,6 +600,10 @@
     [
       "891f5055-7819-4ba1-918e-cbf56e33b3d9",
       "leds1"
+    ],
+    [
+      "f2a6ef86-3610-4341-b64c-bb7fd8ed5534",
+      "leds2"
     ]
   ],
   "text_variables": {}
