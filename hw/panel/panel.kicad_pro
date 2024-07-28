@@ -490,7 +490,7 @@
     "page_layout_descr_file": ""
   },
   "schematic": {
-    "annotate_start_num": 211,
+    "annotate_start_num": 199,
     "bom_export_filename": "",
     "bom_fmt_presets": [],
     "bom_fmt_settings": {
@@ -600,6 +600,10 @@
     [
       "f2a6ef86-3610-4341-b64c-bb7fd8ed5534",
       "led_top_right"
+    ],
+    [
+      "717a5ba3-ee4f-4fff-9e32-af82e720b4ae",
+      "led_bot_right"
     ],
     [
       "891f5055-7819-4ba1-918e-cbf56e33b3d9",

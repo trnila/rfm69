@@ -3619,6 +3619,10 @@
 		(uuid "9beb5c63-8db7-437b-a1cd-8660639d94f5")
 	)
 	(no_connect
+		(at 173.99 80.01)
+		(uuid "a6b54ba8-aea9-46fd-827f-ac4963c94c13")
+	)
+	(no_connect
 		(at 210.82 119.38)
 		(uuid "b762c660-87db-4e9c-838b-5e55035b11c6")
 	)
@@ -3656,6 +3660,16 @@
 	)
 	(wire
 		(pts
+			(xy 190.5 80.01) (xy 190.5 77.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "00a7ff23-ccde-41ec-968c-d9f14ef4d295")
+	)
+	(wire
+		(pts
 			(xy 72.39 38.1) (xy 76.2 38.1)
 		)
 		(stroke
@@ -3673,6 +3687,16 @@
 			(type default)
 		)
 		(uuid "11f6db7a-07a7-4e48-a9b6-3d85da8ce411")
+	)
+	(wire
+		(pts
+			(xy 194.31 80.01) (xy 190.5 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "20679a18-e932-42e4-9109-662300f9d333")
 	)
 	(wire
 		(pts
@@ -3826,6 +3850,16 @@
 	)
 	(wire
 		(pts
+			(xy 213.36 77.47) (xy 207.01 77.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "800e961f-e96f-4f94-8df6-a0c3c4ed688b")
+	)
+	(wire
+		(pts
 			(xy 102.87 149.86) (xy 102.87 147.32)
 		)
 		(stroke
@@ -3893,6 +3927,16 @@
 			(type default)
 		)
 		(uuid "9a1d3c01-1cb6-406b-acd6-3025b644eb24")
+	)
+	(wire
+		(pts
+			(xy 186.69 77.47) (xy 190.5 77.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a01e81c8-475e-4427-8628-45a1ee038bf3")
 	)
 	(wire
 		(pts
@@ -3966,6 +4010,16 @@
 	)
 	(wire
 		(pts
+			(xy 213.36 63.5) (xy 213.36 77.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bd3351b9-1fe2-458b-8665-d4e70f347035")
+	)
+	(wire
+		(pts
 			(xy 127 151.13) (xy 127 149.86)
 		)
 		(stroke
@@ -4003,6 +4057,16 @@
 			(type default)
 		)
 		(uuid "d7112159-77de-44c5-94ab-8d3002fbbcfc")
+	)
+	(wire
+		(pts
+			(xy 207.01 63.5) (xy 213.36 63.5)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "eb8f15da-52b8-442e-aef1-c102f4f2421f")
 	)
 	(wire
 		(pts
@@ -8609,6 +8673,64 @@
 			(project "panel"
 				(path "/75e15db9-5774-4cb3-bd4e-28bd152fa038"
 					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 194.31 74.93)
+		(size 12.7 7.62)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "717a5ba3-ee4f-4fff-9e32-af82e720b4ae")
+		(property "Sheetname" "led_bot_right"
+			(at 194.31 74.2184 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "leds.kicad_sch"
+			(at 194.31 83.1346 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "RGB_IN" input
+			(at 207.01 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+			(uuid "82b5b40f-b5ca-42d1-ad15-fc0ad9dcfdd6")
+		)
+		(pin "RGB_OUT" input
+			(at 194.31 80.01 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "70c0e70f-920e-4bc2-bdb2-8ade778955dd")
+		)
+		(instances
+			(project "panel"
+				(path "/75e15db9-5774-4cb3-bd4e-28bd152fa038"
+					(page "4")
 				)
 			)
 		)
