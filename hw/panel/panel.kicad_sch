@@ -7789,7 +7789,7 @@
 	)
 	(symbol
 		(lib_id "Device:LED")
-		(at 64.77 43.18 180)
+		(at 55.88 43.18 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -7798,7 +7798,7 @@
 		(fields_autoplaced yes)
 		(uuid "9f6c667e-05e1-44e4-9006-84850948e026")
 		(property "Reference" "D1"
-			(at 66.3575 35.56 0)
+			(at 57.4675 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7806,7 +7806,7 @@
 			)
 		)
 		(property "Value" "LED"
-			(at 66.3575 38.1 0)
+			(at 57.4675 38.1 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7814,7 +7814,7 @@
 			)
 		)
 		(property "Footprint" "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder"
-			(at 64.77 43.18 0)
+			(at 55.88 43.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7823,7 +7823,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 64.77 43.18 0)
+			(at 55.88 43.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7832,7 +7832,7 @@
 			)
 		)
 		(property "Description" "Light emitting diode"
-			(at 64.77 43.18 0)
+			(at 55.88 43.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8170,7 +8170,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 55.88 43.18 90)
+		(at 64.77 43.18 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -8179,7 +8179,7 @@
 		(fields_autoplaced yes)
 		(uuid "bc0c40fa-de59-4cb4-8bc2-82a5df26a919")
 		(property "Reference" "R1"
-			(at 55.88 36.83 90)
+			(at 64.77 36.83 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8187,7 +8187,7 @@
 			)
 		)
 		(property "Value" "100k"
-			(at 55.88 39.37 90)
+			(at 64.77 39.37 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8195,7 +8195,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
-			(at 55.88 44.958 90)
+			(at 64.77 44.958 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8204,7 +8204,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 55.88 43.18 0)
+			(at 64.77 43.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8213,7 +8213,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 55.88 43.18 0)
+			(at 64.77 43.18 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9015,7 +9015,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_AMASS:AMASS_XT30PW-M_1x02_P2.50mm_Horizontal"
+		(property "Footprint" "Connector_Molex:Molex_Micro-Fit_3.0_43650-0200_1x02_P3.00mm_Horizontal"
 			(at 21.59 164.846 0)
 			(effects
 				(font
